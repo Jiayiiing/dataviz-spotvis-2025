@@ -8,10 +8,10 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
-  const countryName = 'IN'
+  const countryId = searchParams.get("countryId")
 
   // Check if startDate, endDate, or country are missing
-  if (!startDate || !endDate || !countryName) {
+  if (!startDate || !endDate || !countryId) {
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
 
@@ -28,7 +28,8 @@ export async function GET(req: NextRequest) {
         energy, 
         loudness
       )
-    `) 
+    `)
+    .eq("country_id", countryId)
     .gte("snapshot_date", startDate)
     .lte("snapshot_date", endDate)
     .order("snapshot_date", { ascending: false })

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import DatePicker from "@/components/DatePicker";
 import SongList from "@/components/SongList";
+import { useSearchParams } from 'next/navigation'
 
 // Type for the Ranking data and Song (with relevant fields)
 type Song = {
@@ -18,6 +19,10 @@ type Ranking = {
 };
 
 export default function RankingsPage() {
+  const searchParams = useSearchParams()  // Read URL params
+  const country = searchParams.get('country')
+  const countryId = searchParams.get('countryId')
+
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [rankings, setRankings] = useState<Ranking[]>([]); 
@@ -60,12 +65,14 @@ export default function RankingsPage() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/rankings?startDate=${startDate}&endDate=${endDate}`);
+      const response = await fetch(`/api/rankings?countryId=${countryId}&startDate=${startDate}&endDate=${endDate}`);
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch rankings");
       }
+
+      console.log(data)
 
       setRankings(data); // Store the full rankings data
     } catch (err: any) {
