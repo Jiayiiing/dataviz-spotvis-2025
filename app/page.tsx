@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const [countries, setCountries] = useState<any[]>([]);
@@ -9,6 +10,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const router = useRouter()
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -46,6 +49,17 @@ export default function Home() {
     }
   };
 
+  // Send id and country to next page.
+  const chooseCountry = (id: number, country: string) => {
+    router.push(`/rankings?country=${country}&countryId=${id}`)
+  }
+
+  // Random country selection
+  const handleRandomCountry = () => {
+    const randomCountry = countries[Math.floor(Math.random() * countries.length)]
+    chooseCountry(randomCountry.id, randomCountry.country)
+  }
+
   return (
     <div className="p-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Select a Country</h1>
@@ -55,6 +69,7 @@ export default function Home() {
 
       {!loading && !error && (
         <div className="relative">
+          <div className="flex items-center">
           <input
             type="text"
             value={search}
@@ -63,6 +78,22 @@ export default function Home() {
             placeholder="Search for a country..."
             className="border p-2 rounded w-full"
           />
+          <button
+          onClick={() => {
+            // Find the country that matches the search query
+            const selectedCountry = filteredCountries.find(
+              (country) => country.country.toLowerCase() === search.toLowerCase()
+            );
+
+            if (selectedCountry) {
+              chooseCountry(selectedCountry.id, selectedCountry.country);
+            }
+          }}
+          className="border p-2 rounded w-full bg-blue-500 text-white hover:bg-blue-600"
+          >
+          Search Country
+          </button>
+          </div>
           {showDropdown && (
             <ul className="absolute z-10 bg-white border border-gray-300 rounded w-full mt-1 max-h-60 overflow-y-auto shadow-md">
               {filteredCountries.length > 0 ? (
