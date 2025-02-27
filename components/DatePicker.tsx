@@ -29,7 +29,7 @@ export default function DatePicker({
         min={minDate}
         max={maxDate}
         onChange={(e) => setStartDate(e.target.value)}
-        className="border p-2 rounded"
+        className="border p-2 rounded text-white"
         disabled={dateRangeLoading}
       />
       <input
@@ -38,7 +38,7 @@ export default function DatePicker({
         min={minDate}
         max={maxDate}
         onChange={(e) => setEndDate(e.target.value)}
-        className="border p-2 rounded"
+        className="border p-2 rounded text-white"
         disabled={dateRangeLoading}
       />
       <button

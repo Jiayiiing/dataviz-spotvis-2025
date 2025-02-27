@@ -76,7 +76,7 @@ export default function Home() {
             onChange={handleSearch}
             onFocus={() => setShowDropdown(true)}
             placeholder="Search for a country..."
-            className="border p-2 rounded w-full"
+            className="border p-2 rounded w-full text-white"
           />
           <button
           onClick={() => {
