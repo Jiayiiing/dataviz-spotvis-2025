@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { Radius } from "lucide-react";
+import { Suspense } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -119,9 +120,11 @@ const HeatmapChart = () => {
 
 
   return (
+    <Suspense>
     <div>
       {loading ? <p>Loading heatmap...</p> : <Chart options={options} series={chartData} type="heatmap" height={600} />}
     </div>
+    </Suspense>
   );
 };
 
