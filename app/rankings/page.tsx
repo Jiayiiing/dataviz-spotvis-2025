@@ -14,8 +14,9 @@ type Song = {
 type Ranking = {
   spotify_id: string;
   daily_rank: number;
+  albumCover: string | null;
   snapshot_date: string;
-  Songs: Song[];
+  Songs: Song;
 };
 
 export default function RankingsPage() {
@@ -72,9 +73,8 @@ export default function RankingsPage() {
         throw new Error(data.error || "Failed to fetch rankings");
       }
 
-      console.log(data)
-
       setRankings(data); // Store the full rankings data
+
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
     } finally {
@@ -104,7 +104,7 @@ export default function RankingsPage() {
       {/* Song List Component */}
       {!loading && !error && rankings.length > 0 && (
         <SongList
-          songs={rankings.flatMap((ranking) => ranking.Songs)} // Flatten all songs from the rankings
+          rankings={rankings}
           selectedSongs={selectedSongs}
           onSelectionChange={setSelectedSongs}
         />

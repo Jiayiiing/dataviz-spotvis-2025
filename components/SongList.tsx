@@ -5,14 +5,22 @@ type Song = {
   spotify_id: string;
 };
 
+type Ranking = {
+  spotify_id: string;
+  daily_rank: number;
+  snapshot_date: string;
+  albumCover: string | null; // albumCover moved to the ranking level
+  Songs: Song;
+};
+
 type SongListProps = {
-  songs: Song[]; // Array of Song objects
+  rankings: Ranking[]; // Array of Song objects
   selectedSongs: Song[]; // Array of selected Song objects
   onSelectionChange: (selectedSongs: Song[]) => void; // Function to update the selected songs
 };
 
 export default function SongList({
-  songs,
+  rankings,
   selectedSongs,
   onSelectionChange,
 }: SongListProps) {
@@ -33,19 +41,27 @@ export default function SongList({
         <thead>
           <tr className="bg-gray-200">
             <th className="border p-2">Select</th>
+            <th className="border p-2">Album</th>
             <th className="border p-2">Song Name</th>
           </tr>
         </thead>
         <tbody>
-          {songs.map((song, index) => (
-            <tr key={index}>
+          {rankings.map((ranking) => (
+            <tr key={ranking.spotify_id}>
               <td className="border p-2">
                 <input
                   type="checkbox"
-                  onChange={(e) => handleCheckboxChange(song, e.target.checked)}
-                />
+                  onChange={(e) => handleCheckboxChange(ranking.Songs, e.target.checked)}/>
               </td>
-              <td className="border p-2">{song.name}</td>
+              <td className="border p-2">
+                {ranking.albumCover ? (
+                  <img
+                    src={ranking.albumCover}
+                    alt="Album Cover"
+                    className="w-12 h-12 rounded"
+                  />) : (<span>No Image</span>)}
+              </td>
+              <td className="border p-2">{ranking.Songs.name}</td>
             </tr>
           ))}
         </tbody>
