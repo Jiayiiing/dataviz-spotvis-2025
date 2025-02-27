@@ -11,7 +11,13 @@ import { useSearchParams } from "next/navigation";
 
 // Type definitions
 type Song = { name: string; spotify_id: string };
-type Ranking = { spotify_id: string; daily_rank: number; albumCover: string | null; snapshot_date: string; Songs: Song };
+type Ranking = {
+  spotify_id: string;
+  daily_rank: number;
+  albumCover: string | null;
+  snapshot_date: string;
+  Songs: Song;
+};
 type Word = { text: string; value: number };
 type Artist = { name: string };
 type SongArtist = { Artists: Artist };
@@ -24,7 +30,9 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
 
   data.forEach((entry) => {
     const points = 51 - entry.daily_rank;
-    const artistArray = Object.values(entry.Songs).find((item) => Array.isArray(item)) as SongArtist[] | undefined;
+    const artistArray = Object.values(entry.Songs).find((item) =>
+      Array.isArray(item)
+    ) as SongArtist[] | undefined;
 
     if (!artistArray) return;
 
@@ -34,12 +42,15 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
     });
   });
 
-  return Object.entries(artistScores).map(([artist, score]) => ({ text: artist, value: score }));
+  return Object.entries(artistScores).map(([artist, score]) => ({
+    text: artist,
+    value: score,
+  }));
 };
 
 export default function RankingsPage() {
-   const searchParams = useSearchParams();
-  const countryId = searchParams.get('countryId');
+  const searchParams = useSearchParams();
+  const countryId = searchParams.get("countryId");
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -82,11 +93,15 @@ export default function RankingsPage() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/rankings?countryId=${countryId}&startDate=${startDate}&endDate=${endDate}`);
+      const response = await fetch(
+        `/api/rankings?countryId=${countryId}&startDate=${startDate}&endDate=${endDate}`
+      );
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to fetch rankings");
+      if (!response.ok)
+        throw new Error(data.error || "Failed to fetch rankings");
 
       setRankings(data);
+      console.log(data);
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
     } finally {
@@ -115,41 +130,41 @@ export default function RankingsPage() {
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500 font-semibold">{error}</p>}
 
-      {/* 2x2 Grid Layout */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-4 w-full mt-6">
+      {/* 2x2 Grid Layout (Scrollable) */}
+      <div className="grid grid-cols-2 grid-rows-2 gap-4 w-full mt-6 h-[80vh] overflow-auto">
         {/* WordCloud */}
-        <div className="p-4 border rounded bg-gray-100 flex justify-center items-center">
+        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
           <WordCloud data={artistsRankings} width={300} height={250} />
         </div>
 
         {/* Heatmap */}
-        <div className="p-4 border rounded bg-gray-100 flex justify-center items-center">
+        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
           <HeatmapChart />
         </div>
 
-        {/* Radar Chart */}
-        <div className="p-4 border rounded bg-gray-100 flex flex-col justify-center items-center">
+        {/* Radar Chart with Selected Song IDs */}
+        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
           {/* Selected Song IDs */}
-          <div className="mb-4 text-center">
-            <p>003vvx7Niy0yvhvHt4a68B</p>
-            <p>00R2eVdkti9OZboefW2f4i</p>
+          <div className="mb-4 text-center border-b pb-2 w-full">
+            <p className="text-sm text-gray-600">003vvx7Niy0yvhvHt4a68B</p>
+            <p className="text-sm text-gray-600">00R2eVdkti9OZboefW2f4i</p>
           </div>
 
           {/* Radar Chart */}
-          <h1>Radar Chart</h1>
+          <h1 className="text-lg font-semibold mb-2">Radar Chart</h1>
           <Radartest />
         </div>
 
         {/* Song List */}
-        <div className="p-4 border rounded bg-gray-100 overflow-auto">
-          <SongList
+        <div className="p-4 border rounded bg-[var(--grid-bg-color)] overflow-auto">
+          
+        </div>
+      </div>
+      <SongList
             rankings={rankings}
             selectedSongs={selectedSongs}
             onSelectionChange={setSelectedSongs}
           />
-        </div>
-      </div>
-
       {/* Selected Songs List (Debugging) */}
       {selectedSongs.length > 0 && (
         <div className="mt-6 p-4 border rounded bg-gray-100">

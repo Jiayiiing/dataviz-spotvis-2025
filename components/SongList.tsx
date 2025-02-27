@@ -30,7 +30,9 @@ export default function SongList({
       onSelectionChange([...selectedSongs, song]);
     } else {
       // Remove song from selectedSongs when unchecked
-      onSelectionChange(selectedSongs.filter((s) => s.spotify_id !== song.spotify_id));
+      onSelectionChange(
+        selectedSongs.filter((s) => s.spotify_id !== song.spotify_id)
+      );
     }
   };
 
@@ -46,24 +48,40 @@ export default function SongList({
           </tr>
         </thead>
         <tbody>
-          {rankings.map((ranking) => (
-            <tr key={ranking.spotify_id}>
-              <td className="border p-2">
-                <input
-                  type="checkbox"
-                  onChange={(e) => handleCheckboxChange(ranking.Songs, e.target.checked)}/>
-              </td>
-              <td className="border p-2">
-                {ranking.albumCover ? (
-                  <img
-                    src={ranking.albumCover}
-                    alt="Album Cover"
-                    className="w-12 h-12 rounded"
-                  />) : (<span>No Image</span>)}
-              </td>
-              <td className="border p-2">{ranking.Songs.name}</td>
-            </tr>
-          ))}
+          {(() => {
+            const seenSongs = new Set(); // Store unique song IDs
+
+            return rankings
+              .filter((ranking) => {
+                if (seenSongs.has(ranking.spotify_id)) return false; // Skip duplicates
+                seenSongs.add(ranking.spotify_id); // Mark as seen
+                return true;
+              })
+              .map((ranking) => (
+                <tr key={ranking.spotify_id}>
+                  <td className="border p-2">
+                    <input
+                      type="checkbox"
+                      onChange={(e) =>
+                        handleCheckboxChange(ranking.Songs, e.target.checked)
+                      }
+                    />
+                  </td>
+                  <td className="border p-2">
+                    {ranking.albumCover ? (
+                      <img
+                        src={ranking.albumCover}
+                        alt="Album Cover"
+                        className="w-12 h-12 rounded"
+                      />
+                    ) : (
+                      <span>No Image</span>
+                    )}
+                  </td>
+                  <td className="border p-2">{ranking.Songs.name}</td>
+                </tr>
+              ));
+          })()}
         </tbody>
       </table>
     </div>
