@@ -5,6 +5,7 @@ import DatePicker from "@/components/DatePicker";
 import SongList from "@/components/SongList";
 import WordCloud from "@/components/WordCloud";
 import HeatmapChart from "@/components/heatmap";
+import Radartest from "@/app/radartest/page";
 //import RadarChart from "@/components/RadarChart"; // Ensure this component exists
 import { useSearchParams } from "next/navigation";
 
@@ -129,6 +130,8 @@ export default function RankingsPage() {
         {/* Radar Chart */}
         <div className="p-4 border rounded bg-gray-100 flex justify-center items-center">
           <h1>Radar Chart</h1>
+          <Radartest />
+
         </div>
 
         {/* Song List */}

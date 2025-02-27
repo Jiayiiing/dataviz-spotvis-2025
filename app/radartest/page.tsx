@@ -8,7 +8,7 @@ import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler,
 // Register necessary chart components
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
-export default function Page() {
+export default function Radartest() {
     const [data, setData] = useState<any[] | null>(null);
     const [songId1, setSongId1] = useState('');
     const [songId2, setSongId2] = useState('');
