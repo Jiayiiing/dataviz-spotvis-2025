@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     .lte("snapshot_date", endDate)
     .order("daily_rank", { ascending: true }) // Best rank first
     .order("snapshot_date", { ascending: true })
-    .limit(100);
+    .limit(1000);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

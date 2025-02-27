@@ -40,9 +40,9 @@ const HeatmapChart = () => {
         const rawData = await res.json();
 
         const artistMap = new Map();
-        const allDates = new Set(rawData.map(({ snapshot_date }) => snapshot_date));
+        const allDates = new Set(rawData.map(({ snapshot_date }: any) => snapshot_date));
 
-        rawData.forEach(({ artist_name, snapshot_date, daily_rank }) => {
+        rawData.forEach(({ artist_name, snapshot_date, daily_rank }: any) => {
             if (!artistMap.has(artist_name)) {
                 artistMap.set(artist_name, new Map());
             }
@@ -52,12 +52,12 @@ const HeatmapChart = () => {
         const formatedData = Array.from(artistMap, ([artist, rankMap]) => ({
             name: artist,
             data: Array.from(allDates, (date) => ({
-                x: date,
+                x: date as any,
                 y: rankMap.get(date) ?? null,
             })),
         }));
 
-        setChartData(formatedData);
+        setChartData(formatedData as any);
         console.log("Formatted Heatmap Data:", formatedData);
         
       } catch (error) {
@@ -73,32 +73,35 @@ const HeatmapChart = () => {
   //const colors = chartData.map(() => getRandomColor());
 
   // ApexCharts options
-  const options = {
-    chart: { type: "heatmap" },
-    dataLabels: {enabled: false},
-    xaxis: {type: "category" },
-    tooltip: {enabled: false},
-    plotOptions:{
-        heatmap: {
-            radius: 3,
-            shadeIntensity: 0.5,
-            useFillColorAsStroke: true,
-            colorScale: {
-                min: 1,
-                max: 50,
-                inverse: true,
-                ranges: [
-                    {from:1, to: 10, color:"#ff0000"},
-                    {from:11, to: 20, color:"#ff4444"},
-                    {from:21, to: 30, color:"#ff8888"},
-                    {from:31, to: 40, color:"#ffbbbb"},
-                    {from:41, to: 50, color:"#ffe5e5"},
-                    {from:51, to: 100, color:"#ffffff"},
-                    {from:null, to: null, color:"#ffffff"},
-                ]
-            }
+  const options: ApexCharts.ApexOptions = {
+    chart: { type: "heatmap" }, // explicitly use "heatmap"
+    dataLabels: { enabled: false },
+    xaxis: { type: "category" },
+    tooltip: { enabled: true },
+    plotOptions: {
+      heatmap: {
+        radius: 1,
+        shadeIntensity: 0.5,
+        useFillColorAsStroke: false,
+        distributed: false,
+        colorScale: {
+          inverse: true,
+          min: 1,
+          max: 50,
+          ranges: [
+            { from: 1, to: 10, color: "#FF0000" }, // Bright red
+            { from: 11, to: 20, color: "#FF4444" }, // Slightly lighter red
+            { from: 21, to: 30, color: "#FF8888" }, // Medium light red
+            { from: 31, to: 40, color: "#FFBBBB" }, // Even lighter red
+            { from: 41, to: 50, color: "#FFE5E5" }, // Almost white
+            { from: 51, to: 1000, color: "#FFFFFF" }, // Pure white for missing values
+            //{ from: null, to: null, color: "#FFFFFF" }, // Make explicit nulls white
+          ],
         },
+      },
     },
+  };
+  
     /*
     plotOptions: {
         heatmap: {
@@ -113,7 +116,7 @@ const HeatmapChart = () => {
     },
     colors: ["ff0000"],
     */
-    };
+
 
   return (
     <div>
