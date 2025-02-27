@@ -1,6 +1,6 @@
 "use client"; // Add this at the very top
 
-import Page1 from "@/app/radartest/page";
+import Page1 from "@/components/radartest";
 import Page2 from "@/app/tester/page";
 
 export default function Home() {

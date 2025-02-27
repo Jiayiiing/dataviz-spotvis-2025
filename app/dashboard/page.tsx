@@ -5,7 +5,7 @@ import DatePicker from "@/components/DatePicker";
 import SongList from "@/components/SongList";
 import WordCloud from "@/components/WordCloud";
 import HeatmapChart from "@/components/heatmap";
-import Radartest from "@/app/radartest/page";
+import Radartest from "@/components/radartest";
 //import RadarChart from "@/components/RadarChart"; // Ensure this component exists
 import { useSearchParams } from "next/navigation";
 
