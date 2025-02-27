@@ -38,8 +38,12 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
 };
 
 export default function RankingsPage() {
+  const [countryId, setCountryId] = useState<string | null>(null);
   const searchParams = useSearchParams();
-  const countryId = searchParams.get("countryId");
+
+  useEffect(() => {
+    setCountryId(searchParams.get("countryId"));
+  }, [searchParams]);
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
