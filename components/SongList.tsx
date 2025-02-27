@@ -41,7 +41,7 @@ export default function SongList({
       <h2 className="text-xl font-bold mb-4">Song List</h2>
       <table className="w-full border-collapse border border-gray-300">
         <thead>
-          <tr className="bg-gray-200">
+          <tr className="bg-dark-200">
             <th className="border p-2">Select</th>
             <th className="border p-2">Album</th>
             <th className="border p-2">Song Name</th>

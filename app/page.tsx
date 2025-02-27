@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [countries, setCountries] = useState<any[]>([]);
@@ -11,7 +11,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -44,58 +44,66 @@ export default function Home() {
       setFilteredCountries(countries);
     } else {
       setFilteredCountries(
-        countries.filter((country) => country.country.toLowerCase().includes(query))
+        countries.filter((country) =>
+          country.country.toLowerCase().includes(query)
+        )
       );
     }
   };
 
   // Send id and country to next page.
   const chooseCountry = (id: number, country: string) => {
-    router.push(`/dashboard?country=${country}&countryId=${id}`)
-  }
+    router.push(`/dashboard?country=${country}&countryId=${id}`);
+  };
 
   // Random country selection
   const handleRandomCountry = () => {
-    const randomCountry = countries[Math.floor(Math.random() * countries.length)]
-    chooseCountry(randomCountry.id, randomCountry.country)
-  }
+    const randomCountry =
+      countries[Math.floor(Math.random() * countries.length)];
+    chooseCountry(randomCountry.id, randomCountry.country);
+  };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Select a Country</h1>
+    <div className="p-4 max-w-md mx-auto absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <h1 className="pb-8 text-4xl font-bold mb-4 text-center">Welcome to Spotivis!</h1>
 
-      {loading && <p className="text-center text-gray-500">Loading countries...</p>}
+      <h1 className="text-2xl font-bold mb-4 text-center">Select a Country</h1>
+
+      {loading && (
+        <p className="text-center text-gray-500">Loading countries...</p>
+      )}
       {error && <p className="text-red-500 text-center">{error}</p>}
 
       {!loading && !error && (
         <div className="relative">
           <div className="flex items-center">
-          <input
-            type="text"
-            value={search}
-            onChange={handleSearch}
-            onFocus={() => setShowDropdown(true)}
-            placeholder="Search for a country..."
-            className="border p-2 rounded w-full text-white"
-          />
-          <button
-          onClick={() => {
-            // Find the country that matches the search query
-            const selectedCountry = filteredCountries.find(
-              (country) => country.country.toLowerCase() === search.toLowerCase()
-            );
+            <input
+              type="text"
+              value={search}
+              onChange={handleSearch}
+              onFocus={() => setShowDropdown(true)}
+              placeholder="Search for a country..."
+              className="border p-2 rounded w-full text-white"
+            />
+            <button
+              onClick={() => {
+                // Find the country that matches the search query
+                const selectedCountry = filteredCountries.find(
+                  (country) =>
+                    country.country.toLowerCase() === search.toLowerCase()
+                );
 
-            if (selectedCountry) {
-              chooseCountry(selectedCountry.id, selectedCountry.country);
-            }
-          }}
-          className="border p-2 rounded w-full bg-blue-500 text-white hover:bg-blue-600"
-          >
-          Search Country
-          </button>
+                if (selectedCountry) {
+                  chooseCountry(selectedCountry.id, selectedCountry.country);
+                }
+              }}
+              className="border p-2 rounded w-full bg-blue-500 text-white hover:bg-blue-600"
+            >
+              Search Country
+            </button>
           </div>
           {showDropdown && (
-            <ul className="absolute z-10 bg-white border border-gray-300 rounded w-full mt-1 max-h-60 overflow-y-auto shadow-md">
+            <ul className="absolute z-10 bg-dark border border-gray-300 rounded w-full mt-1 max-h-60 overflow-y-auto shadow-md">
               {filteredCountries.length > 0 ? (
                 filteredCountries.map((country) => (
                   <li

@@ -110,12 +110,13 @@ export default function RankingsPage() {
   };
 
   const artistsRankings = calculateArtistPopularity(rankings);
+  console.log("Rankings Result:", artistsRankings);
 
   return (
-    <div className="p-4 max-w-5xl mx-auto flex flex-col items-center">
-      <h1 className="text-2xl font-bold mb-4">Song Rankings</h1>
+    <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
+      <h1 className="text-4xl font-bold mb-4">Spotivis</h1>
 
-      {/* Date Picker Centered */}
+      {/* Date Picker */}
       <DatePicker
         startDate={startDate}
         setStartDate={setStartDate}
@@ -131,10 +132,10 @@ export default function RankingsPage() {
       {error && <p className="text-red-500 font-semibold">{error}</p>}
 
       {/* 2x2 Grid Layout (Scrollable) */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-4 w-full mt-6 h-[80vh] overflow-auto">
-        {/* WordCloud */}
+      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-lg mt-6 h-[80vh] overflow-auto">
+      {/* WordCloud */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
-          <WordCloud data={artistsRankings} width={300} height={250} />
+          <WordCloud data={artistsRankings} width={500} height={350} />
         </div>
 
         {/* Heatmap */}
@@ -151,21 +152,21 @@ export default function RankingsPage() {
           </div>
 
           {/* Radar Chart */}
-          <h1 className="text-lg font-semibold mb-2">Radar Chart</h1>
+          <h1 className="text-lg font-semibold mb-2">Radar Chart (Very rough prototype)</h1>
           <Radartest />
         </div>
 
         {/* Song List */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] overflow-auto">
-          
-        </div>
-      </div>
-      <SongList
+          <SongList
             rankings={rankings}
             selectedSongs={selectedSongs}
             onSelectionChange={setSelectedSongs}
           />
-      {/* Selected Songs List (Debugging) */}
+        </div>
+      </div>
+
+      {/* Selected Songs List (Debugging) 
       {selectedSongs.length > 0 && (
         <div className="mt-6 p-4 border rounded bg-gray-100">
           <h2 className="text-lg font-semibold mb-2">Selected Songs:</h2>
@@ -175,7 +176,7 @@ export default function RankingsPage() {
             ))}
           </ul>
         </div>
-      )}
+      )}*/}
     </div>
   );
 }

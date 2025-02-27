@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/client";
 import { getAlbumCover } from '@/utils/SpotifyAPI/spotifyApi'
+import { differenceInDays, parseISO } from "date-fns";
 
 
 export async function GET(req: NextRequest) {
@@ -17,6 +18,9 @@ export async function GET(req: NextRequest) {
   if (!startDate || !endDate || !countryId) {
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
+
+  const numDays = differenceInDays(parseISO(endDate), parseISO(startDate)) + 1;
+  const limit = 50 * numDays;
 
   // Fetch rankings for joining with countries table and songs table
   const { data, error } = await supabase
@@ -38,7 +42,7 @@ export async function GET(req: NextRequest) {
     .gte("snapshot_date", startDate)
     .lte("snapshot_date", endDate)
     .order("snapshot_date", { ascending: false })
-    .limit(100);  // Limit the results to 50 (Top 50 songs)
+    .limit(limit);  // Limit the results to 50 (Top 50 songs)
 
   // Handle errors
   if (error) {

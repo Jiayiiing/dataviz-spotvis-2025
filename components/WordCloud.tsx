@@ -33,28 +33,29 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, width = 500, height = 300 }
 
     svg.selectAll("*").remove();
 
-    const displaySelection = svg
-      .append("text")
-      .attr("font-family", "Lucida Console, Courier, monospace")
-      .attr("text-anchor", "start")
-      .attr("alignment-baseline", "hanging")
-      .attr("x", 10)
-      .attr("y", 10);
+    const minFontSize = 10;
+    const maxFontSize = 60;
 
     const scaleSize = d3
       .scaleLinear()
       .domain([1, d3.max(data.map((d) => d.value)) || 1])
-      .range([10, 50]);
+      .range([minFontSize, maxFontSize]);
 
-    const sortedData = [...data].sort((a, b) => b.value - a.value); // Sort largest words first
+    // Sort words by value (largest first)
+    const sortedData = [...data].sort((a, b) => b.value - a.value);
+
+    // Use a fixed random seed so words always appear in the same position
+    const randomGenerator = d3.randomLcg(0.5); // Fixed seed
 
     const layout = cloud<Word>()
       .size([width, height])
       .words(sortedData.map((d) => ({ ...d })))
-      .padding(2) // adjust these two for styling
-      .rotate(() => 0)
+      .padding(2)
+      .rotate(() => 0) // No rotation for stability
       .font(fontFamily)
       .fontSize((d) => scaleSize(d.value))
+      .spiral("rectangular") // More structured layout
+      .random(() => randomGenerator()) // Ensures consistency
       .on("end", (words) => {
         svg
           .selectAll("text.word")
@@ -66,18 +67,23 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, width = 500, height = 300 }
           .attr("transform", (d) => `translate(${(d.x ?? 0) + width / 2},${(d.y ?? 0) + height / 2}) rotate(${d.rotate ?? 0})`)
           .text((d) => d.text)
           .on("mouseover", function () {
+            const currentSize = scaleSize((d3.select(this).datum() as Word).value);
+            const increase = (maxFontSize - minFontSize) * 0.05; // Fixed amount based on scale
             d3.select(this)
               .attr("font-weight", "bold")
-              .attr("font-size", (d) => scaleSize((d as Word).value + 10));
+              .transition()
+              .duration(200)
+              .attr("font-size", currentSize + increase);
           })
           .on("mouseout", function () {
             d3.select(this)
               .attr("font-weight", "normal")
+              .transition()
+              .duration(200)
               .attr("font-size", (d) => scaleSize((d as Word).value));
           })
           .on("click", function (event, d) {
             console.log(d.text);
-            //displaySelection.text(`selection="${d.text}"`);
             d3.select(this).classed("word-selected", !d3.select(this).classed("word-selected"));
           });
       });

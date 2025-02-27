@@ -75,7 +75,7 @@
     font-weight: normal;
   }
   .word-hovered {
-    fill: rgb(11, 122, 50);
+    fill: #80780c;
     font-weight: bold;
   }
   .word-selected {

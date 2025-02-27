@@ -1,5 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { addWeeks, addMonths, addYears, format } from "date-fns"; // Helps with date calculations
+
 type DatePickerProps = {
   startDate: string;
   setStartDate: (date: string) => void;
@@ -21,8 +24,46 @@ export default function DatePicker({
   dateRangeLoading,
   fetchRankings,
 }: DatePickerProps) {
+  const [rangeType, setRangeType] = useState<"Day" | "Week" | "Month" | "Year">(
+    "Day"
+  );
+
+  // Function to update endDate based on range selection
+  const updateEndDate = (newStartDate: string, selectedRange: string) => {
+    let newEndDate = newStartDate;
+
+    switch (selectedRange) {
+      case "Week":
+        newEndDate = format(addWeeks(new Date(newStartDate), 1), "yyyy-MM-dd");
+        break;
+      case "Month":
+        newEndDate = format(addMonths(new Date(newStartDate), 1), "yyyy-MM-dd");
+        break;
+      case "Year":
+        newEndDate = format(addYears(new Date(newStartDate), 1), "yyyy-MM-dd");
+        break;
+      default:
+        newEndDate = newStartDate;
+    }
+
+    setEndDate(newEndDate);
+  };
+
+  useEffect(() => {
+    if (startDate) {
+      updateEndDate(startDate, rangeType); // Update endDate first
+    }
+  }, [startDate, rangeType]); // Runs when startDate or rangeType changes
+
+  useEffect(() => {
+    if (endDate) {
+      fetchRankings(); // Now fetch happens AFTER endDate is updated
+    }
+  }, [endDate]); // Runs when endDate updates
+
   return (
     <div className="flex gap-4 mb-4">
+      {/* Start Date Input */}
       <input
         type="date"
         value={startDate}
@@ -32,22 +73,21 @@ export default function DatePicker({
         className="border p-2 rounded text-white"
         disabled={dateRangeLoading}
       />
-      <input
-        type="date"
-        value={endDate}
-        min={minDate}
-        max={maxDate}
-        onChange={(e) => setEndDate(e.target.value)}
+
+      {/* Dropdown for selecting range */}
+      <select
+        value={rangeType}
+        onChange={(e) =>
+          setRangeType(e.target.value as "Day" | "Week" | "Month" | "Year")
+        }
         className="border p-2 rounded text-white"
         disabled={dateRangeLoading}
-      />
-      <button
-        onClick={fetchRankings}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-        disabled={dateRangeLoading}
       >
-        Fetch Rankings
-      </button>
+        <option value="Day">Day</option>
+        <option value="Week">Week</option>
+        <option value="Month">Month</option>
+        <option value="Year">Year</option>
+      </select>
     </div>
   );
 }
