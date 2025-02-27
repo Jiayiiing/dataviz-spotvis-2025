@@ -8,6 +8,7 @@ export default nextConfig;
 
 module.exports = {
   experimental: {
-    missingSuspenseWithCSRBailout: false,
+    // Disable the Suspense error if you're not using Suspense boundaries
+    reactMode: 'concurrent',
   },
-}
+};
