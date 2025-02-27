@@ -12,3 +12,9 @@ module.exports = {
     reactMode: 'concurrent',
   },
 };
+
+module.exports = {
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
+}

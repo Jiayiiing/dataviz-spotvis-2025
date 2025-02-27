@@ -102,7 +102,6 @@ export default function RankingsPage() {
   const artistsRankings = calculateArtistPopularity(rankings);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
     <div className="p-4 max-w-5xl mx-auto flex flex-col items-center">
       <h1 className="text-2xl font-bold mb-4">Song Rankings</h1>
 
@@ -168,6 +167,5 @@ export default function RankingsPage() {
         </div>
       )}
     </div>
-    </Suspense>
   );
 }

@@ -120,11 +120,9 @@ const HeatmapChart = () => {
 
 
   return (
-    <Suspense>
     <div>
       {loading ? <p>Loading heatmap...</p> : <Chart options={options} series={chartData} type="heatmap" height={600} />}
     </div>
-    </Suspense>
   );
 };
 
