@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     .gte("snapshot_date", startDate)
     .lte("snapshot_date", endDate)
     .order("snapshot_date", { ascending: false })
-    .limit(5);  // Limit the results to 50 (Top 50 songs)
+    .limit(50);  // Limit the results to 50 (Top 50 songs)
 
   // Handle errors
   if (error) {
