@@ -119,24 +119,25 @@ export default function RankingsPage() {
       <div className="grid grid-cols-2 grid-rows-2 gap-4 w-full mt-6">
         {/* WordCloud */}
         <div className="p-4 border rounded bg-gray-100 flex justify-center items-center">
-          <Suspense fallback={<p>Loading WordCloud...</p>}>
-            <WordCloud data={artistsRankings} width={300} height={250} />
-          </Suspense>
+          <WordCloud data={artistsRankings} width={300} height={250} />
         </div>
 
         {/* Heatmap */}
         <div className="p-4 border rounded bg-gray-100 flex justify-center items-center">
-          <Suspense fallback={<p>Loading Heatmap...</p>}>
-            <HeatmapChart />
-          </Suspense>
+          <HeatmapChart />
         </div>
 
         {/* Radar Chart */}
         <div className="p-4 border rounded bg-gray-100 flex flex-col justify-center items-center">
+          {/* Selected Song IDs */}
+          <div className="mb-4 text-center">
+            <p>003vvx7Niy0yvhvHt4a68B</p>
+            <p>00R2eVdkti9OZboefW2f4i</p>
+          </div>
+
+          {/* Radar Chart */}
           <h1>Radar Chart</h1>
-          <Suspense fallback={<p>Loading Radar Chart...</p>}>
-            <Radartest />
-          </Suspense>
+          <Radartest />
         </div>
 
         {/* Song List */}
@@ -149,7 +150,7 @@ export default function RankingsPage() {
         </div>
       </div>
 
-      {/* Selected Songs List */}
+      {/* Selected Songs List (Debugging) */}
       {selectedSongs.length > 0 && (
         <div className="mt-6 p-4 border rounded bg-gray-100">
           <h2 className="text-lg font-semibold mb-2">Selected Songs:</h2>
