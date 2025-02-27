@@ -68,7 +68,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, width = 500, height = 300 }
           .text((d) => d.text)
           .on("mouseover", function () {
             const currentSize = scaleSize((d3.select(this).datum() as Word).value);
-            const increase = (maxFontSize - minFontSize) * 0.05; // Fixed amount based on scale
+            const increase = (maxFontSize - minFontSize) * 0.02; // Fixed amount based on scale
             d3.select(this)
               .attr("font-weight", "bold")
               .transition()

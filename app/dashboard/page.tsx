@@ -147,12 +147,12 @@ export default function RankingsPage() {
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
           {/* Selected Song IDs */}
           <div className="mb-4 text-center border-b pb-2 w-full">
-            <p className="text-sm text-gray-600">003vvx7Niy0yvhvHt4a68B</p>
-            <p className="text-sm text-gray-600">00R2eVdkti9OZboefW2f4i</p>
+            <p className="text-sm text-gray-600">SongID 1: 003vvx7Niy0yvhvHt4a68B</p>
+            <p className="text-sm text-gray-600">SongID 2: 00R2eVdkti9OZboefW2f4i</p>
           </div>
 
           {/* Radar Chart */}
-          <h1 className="text-lg font-semibold mb-2">Radar Chart (Very rough prototype)</h1>
+          <h1 className="text-lg font-semibold mb-2">Radar Chart</h1>
           <Radartest />
         </div>
 

@@ -104,7 +104,14 @@ export default function Radartest() {
           value={songId2}
           onChange={(e) => setSongId2(e.target.value)}
         />
-        <button onClick={getData}>Fetch Data</button>
+        <div className="flex justify-center">
+          <button
+            onClick={getData}
+            className="px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Fetch Data
+          </button>
+        </div>
       </div>
 
       {loading ? (
