@@ -50,7 +50,7 @@ if (songArtistsError) {
 
 // Create a mapping from spotify_id to artist_name
 const artistMap = songArtistsData.reduce((acc, entry) => {
-  acc[entry.spotify_id] = entry.Artists?.name || "Unknown Artist";
+  acc[entry.spotify_id] = (entry.Artists as any)?.name || "Unknown Artist";
   return acc;
 }, {} as Record<string, string>);
 
