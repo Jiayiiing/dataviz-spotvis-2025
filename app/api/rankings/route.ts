@@ -23,10 +23,12 @@ export async function GET(req: NextRequest) {
       daily_rank,
       snapshot_date,
       Songs:spotify_id (
-        name, 
-        popularity, 
-        energy, 
-        loudness
+        name,
+          Song_artists (
+            Artists (
+              name
+            )
+          )
       )
     `)
     .eq("country_id", countryId)
