@@ -46,6 +46,7 @@ export default function RankingsPage() {
           setMaxDate(data.maxDate);
           setStartDate(data.minDate);
           setEndDate(data.maxDate);
+          console.log(data);
         } else {
           throw new Error(data.error || "Failed to fetch date range");
         }
