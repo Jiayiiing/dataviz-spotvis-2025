@@ -128,10 +128,16 @@ export default function RankingsPage() {
         </div>
 
         {/* Radar Chart */}
-        <div className="p-4 border rounded bg-gray-100 flex justify-center items-center">
+        <div className="p-4 border rounded bg-gray-100 flex flex-col justify-center items-center">
+          {/* Selected Song IDs */}
+          <div className="mb-4 text-center">
+            <p>003vvx7Niy0yvhvHt4a68B</p>
+            <p>00R2eVdkti9OZboefW2f4i</p>
+          </div>
+
+          {/* Radar Chart */}
           <h1>Radar Chart</h1>
           <Radartest />
-
         </div>
 
         {/* Song List */}
