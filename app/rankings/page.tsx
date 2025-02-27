@@ -1,30 +1,80 @@
-"use client"; // Required for useState & useEffect
+"use client";
 
-import { useState } from "react";
-import { format } from "date-fns";
+import { useState, useEffect } from "react";
+import DatePicker from "@/components/DatePicker";
+import SongList from "@/components/SongList";
+import { useSearchParams } from 'next/navigation'
+
+// Type for the Ranking data and Song (with relevant fields)
+type Song = {
+  name: string;
+  spotify_id: string;
+};
+
+type Ranking = {
+  spotify_id: string;
+  daily_rank: number;
+  snapshot_date: string;
+  Songs: Song[];
+};
 
 export default function RankingsPage() {
+  const searchParams = useSearchParams()  // Read URL params
+  const country = searchParams.get('country')
+  const countryId = searchParams.get('countryId')
+
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [songs, setSongs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null); 
+  const [rankings, setRankings] = useState<Ranking[]>([]); 
+  const [selectedSongs, setSelectedSongs] = useState<Song[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [minDate, setMinDate] = useState<string>("");
+  const [maxDate, setMaxDate] = useState<string>("");
+  const [dateRangeLoading, setDateRangeLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Fetch the possible dates for the datepicker
+    const fetchDateRange = async () => {
+      try {
+        const response = await fetch("/api/rankings-dates");
+        const data = await response.json();
+
+        if (response.ok) {
+          setMinDate(data.minDate);
+          setMaxDate(data.maxDate);
+          setStartDate(data.minDate);
+          setEndDate(data.maxDate);
+        } else {
+          throw new Error(data.error || "Failed to fetch date range");
+        }
+      } catch (err: any) {
+        setError(err.message || "An unexpected error occurred");
+      } finally {
+        setDateRangeLoading(false);
+      }
+    };
+
+    fetchDateRange();
+  }, []);
 
   const fetchRankings = async () => {
     if (!startDate || !endDate) return;
 
     setLoading(true);
-    setError(null); 
+    setError(null);
 
     try {
-      const response = await fetch(`/api/rankings?startDate=${startDate}&endDate=${endDate}`);
+      const response = await fetch(`/api/rankings?countryId=${countryId}&startDate=${startDate}&endDate=${endDate}`);
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch rankings");
       }
 
-      setSongs(data);
+      console.log(data)
+
+      setRankings(data); // Store the full rankings data
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
     } finally {
@@ -35,59 +85,46 @@ export default function RankingsPage() {
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Song Rankings</h1>
-      <div className="flex gap-4 mb-4">
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="border p-2 rounded"
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="border p-2 rounded"
-        />
-        <button
-          onClick={fetchRankings}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Fetch Rankings
-        </button>
-      </div>
+
+      {/* Date Picker Component */}
+      <DatePicker
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        minDate={minDate}
+        maxDate={maxDate}
+        dateRangeLoading={dateRangeLoading}
+        fetchRankings={fetchRankings}
+      />
 
       {loading && <p>Loading...</p>}
-
       {error && <p className="text-red-500 font-semibold">{error}</p>}
 
-      {!loading && !error && songs.length > 0 && (
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border p-2">Song</th>
-              <th className="border p-2">Country</th>
-              <th className="border p-2">Rank</th>
-              <th className="border p-2">Date</th>
-              <th className="border p-2">Loudness</th>
-              <th className="border p-2">Energy</th>
-            </tr>
-          </thead>
-          <tbody>
-            {songs.map((song, index) => (
-              <tr key={index} className="border">
-                <td className="border p-2">{song.Songs?.name || "Unknown"}</td>
-                <td className="border p-2">{song.Countries?.country || "Unknown"}</td>
-                <td className="border p-2">{song.daily_rank}</td>
-                <td className="border p-2">{format(new Date(song.snapshot_date), "yyyy-MM-dd")}</td>
-                <td className="border p-2">{song.Songs?.loudness || "N/A"}</td>
-                <td className="border p-2">{song.Songs?.energy || "N/A"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Song List Component */}
+      {!loading && !error && rankings.length > 0 && (
+        <SongList
+          songs={rankings.flatMap((ranking) => ranking.Songs)} // Flatten all songs from the rankings
+          selectedSongs={selectedSongs}
+          onSelectionChange={setSelectedSongs}
+        />
       )}
 
-      {!loading && !error && songs.length === 0 && <p>No rankings found.</p>}
+      {!loading && !error && rankings.length === 0 && <p>No Songs found.</p>}
+
+      {/* JUST FOR TESTING: Display Selected Songs */}
+      {selectedSongs.length > 0 && (
+        <div className="mt-6 p-4 border rounded bg-gray-100">
+          <h2 className="text-lg font-semibold mb-2">Selected Songs:</h2>
+          <ul className="list-disc list-inside">
+            {selectedSongs.map((song, index) => (
+              <li key={index}>{song.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* TODO: Add WordCloud, Heatmap, Radar Chart Components*/}
     </div>
   );
 }
