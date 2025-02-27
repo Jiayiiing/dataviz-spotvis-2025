@@ -10,7 +10,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
-  const countryId = searchParams.get("countryId")
+  const countryId = searchParams.get("countryId");
+
 
   // Check if startDate, endDate, or country are missing
   if (!startDate || !endDate || !countryId) {
@@ -37,7 +38,7 @@ export async function GET(req: NextRequest) {
     .gte("snapshot_date", startDate)
     .lte("snapshot_date", endDate)
     .order("snapshot_date", { ascending: false })
-    .limit(50);  // Limit the results to 50 (Top 50 songs)
+    .limit(200);  // Limit the results to 50 (Top 50 songs)
 
   // Handle errors
   if (error) {

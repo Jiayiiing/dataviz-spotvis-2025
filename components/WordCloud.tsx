@@ -42,13 +42,15 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, width = 500, height = 300 }
       .attr("y", 10);
 
     const scaleSize = d3
-      .scaleSqrt()
+      .scaleLinear()
       .domain([1, d3.max(data.map((d) => d.value)) || 1])
-      .range([12, 82]);
+      .range([10, 50]);
+
+    const sortedData = [...data].sort((a, b) => b.value - a.value); // Sort largest words first
 
     const layout = cloud<Word>()
       .size([width, height])
-      .words(data.map((d) => ({ ...d })))
+      .words(sortedData.map((d) => ({ ...d })))
       .padding(2) // adjust these two for styling
       .rotate(() => 0)
       .font(fontFamily)
@@ -66,7 +68,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, width = 500, height = 300 }
           .on("mouseover", function () {
             d3.select(this)
               .attr("font-weight", "bold")
-              .attr("font-size", (d) => scaleSize((d as Word).value + 1));
+              .attr("font-size", (d) => scaleSize((d as Word).value + 10));
           })
           .on("mouseout", function () {
             d3.select(this)

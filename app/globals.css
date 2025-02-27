@@ -69,16 +69,15 @@
     background: none;
   }
   .word-default {
-    fill: cadetblue;
+    fill: rgb(29,185,84);
     font-weight: normal;
   }
   .word-hovered {
-    fill: teal;
+    fill: rgb(11, 122, 50);
     font-weight: bold;
   }
   .word-selected {
-    fill: darkslategrey;
-    font-weight: bold;
+    fill: rgb(255, 241, 117);
   }
 }
 
