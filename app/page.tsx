@@ -51,7 +51,7 @@ export default function Home() {
 
   // Send id and country to next page.
   const chooseCountry = (id: number, country: string) => {
-    router.push(`/rankings?country=${country}&countryId=${id}`)
+    router.push(`/dashboard?country=${country}&countryId=${id}`)
   }
 
   // Random country selection
