@@ -75,33 +75,49 @@ const HeatmapChart = () => {
 
   // ApexCharts options
   const options: ApexCharts.ApexOptions = {
-    chart: { type: "heatmap" }, // explicitly use "heatmap"
+    chart: { type: "heatmap" },
     dataLabels: { enabled: false },
-    xaxis: { type: "category" },
-    tooltip: { enabled: true },
+    xaxis: { 
+      type: "category",
+      labels: {
+        style: {
+          colors: "#FFFFFF", // Change this to your desired color
+          fontSize: "12px",  // Adjust font size if needed
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: "#FFFFFF", // Different color for y-axis
+          fontSize: "12px",
+        }
+      }
+    },
+    tooltip: { enabled: false },
     plotOptions: {
       heatmap: {
-        radius: 1,
+        radius: 0,
         shadeIntensity: 0.5,
-        useFillColorAsStroke: false,
+        useFillColorAsStroke: true,
         distributed: false,
         colorScale: {
           inverse: true,
           min: 1,
           max: 50,
           ranges: [
-            { from: 1, to: 10, color: "#FF0000" }, // Bright red
-            { from: 11, to: 20, color: "#FF4444" }, // Slightly lighter red
-            { from: 21, to: 30, color: "#FF8888" }, // Medium light red
-            { from: 31, to: 40, color: "#FFBBBB" }, // Even lighter red
-            { from: 41, to: 50, color: "#FFE5E5" }, // Almost white
-            { from: 51, to: 1000, color: "#FFFFFF" }, // Pure white for missing values
-            //{ from: null, to: null, color: "#FFFFFF" }, // Make explicit nulls white
+            { from: 1, to: 10, color: "#1DB954" },
+            { from: 11, to: 20, color: "#6FCC9B" },
+            { from: 21, to: 30, color: "#A8E3BF" },
+            { from: 31, to: 40, color: "#D4F1DF" },
+            { from: 41, to: 50, color: "#FFFFFF" }, 
+            { from: 51, to: 1000, color: "#FFFFFF" },
           ],
         },
       },
     },
   };
+  
   
     /*
     plotOptions: {
