@@ -137,10 +137,10 @@ export default function RankingsPage() {
       {error && <p className="text-red-500 font-semibold">{error}</p>}
 
       {/* 2x2 Grid Layout (Scrollable) */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-lg mt-6 h-[80vh] overflow-auto">
+      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-lg mt-6 h-[70vh] overflow-auto">
         {/* WordCloud */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
-          <WordCloud data={artistsRankings} width={500} height={350} />
+          <WordCloud data={artistsRankings} width={500} height={250} />
         </div>
 
         {/* Heatmap */}
