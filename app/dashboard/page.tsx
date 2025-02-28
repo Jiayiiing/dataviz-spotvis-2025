@@ -8,6 +8,7 @@ import HeatmapChart from "@/components/heatmap";
 import Radartest from "@/components/radartest";
 //import RadarChart from "@/components/RadarChart"; // Ensure this component exists
 import { useSearchParams } from "next/navigation";
+import BackArrow from "@/components/backarrow";
 
 // Type definitions
 type Song = { name: string; spotify_id: string };
@@ -116,6 +117,10 @@ export default function RankingsPage() {
     <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
       <h1 className="text-4xl font-bold mb-4">Spotivis</h1>
 
+      <div className="absolute top-4 left-4">
+        <BackArrow />
+      </div>
+      
       {/* Date Picker */}
       <DatePicker
         startDate={startDate}
@@ -133,7 +138,7 @@ export default function RankingsPage() {
 
       {/* 2x2 Grid Layout (Scrollable) */}
       <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-lg mt-6 h-[80vh] overflow-auto">
-      {/* WordCloud */}
+        {/* WordCloud */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
           <WordCloud data={artistsRankings} width={500} height={350} />
         </div>
@@ -147,8 +152,12 @@ export default function RankingsPage() {
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
           {/* Selected Song IDs */}
           <div className="mb-4 text-center border-b pb-2 w-full">
-            <p className="text-sm text-gray-600">SongID 1: 003vvx7Niy0yvhvHt4a68B</p>
-            <p className="text-sm text-gray-600">SongID 2: 00R2eVdkti9OZboefW2f4i</p>
+            <p className="text-sm text-gray-600">
+              SongID 1: 003vvx7Niy0yvhvHt4a68B
+            </p>
+            <p className="text-sm text-gray-600">
+              SongID 2: 00R2eVdkti9OZboefW2f4i
+            </p>
           </div>
 
           {/* Radar Chart */}
