@@ -122,7 +122,8 @@ export default function Home() {
           {showDropdown && (
             <ul className="absolute z-10 bg-dark border border-gray-300 rounded w-full mt-1 max-h-60 overflow-y-auto shadow-md">
               {filteredCountries.length > 0 ? (
-                filteredCountries.map((country) => (
+                filteredCountries.filter((country) => country.country_name)
+                .map((country) => (
                   <li
                     key={country.id}
                     className="p-2 hover:bg-gray-200 cursor-pointer"
