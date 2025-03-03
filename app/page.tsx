@@ -53,15 +53,15 @@ export default function Home() {
   };
 
   // Send id and country to next page.
-  const chooseCountry = (id: number, country: string) => {
-    router.push(`/dashboard?country=${country}&countryId=${id}`);
+  const chooseCountry = (id: number, country_name: string) => {
+    router.push(`/dashboard?country=${country_name}&countryId=${id}`);
   };
 
   // Random country selection
   const handleRandomCountry = () => {
     const randomCountry =
       countries[Math.floor(Math.random() * countries.length)];
-    chooseCountry(randomCountry.id, randomCountry.country);
+    chooseCountry(randomCountry.id, randomCountry.country_name);
   };
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -76,15 +76,24 @@ export default function Home() {
 
   return (
     <div className="p-4 max-w-md mx-auto absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <button onClick={openPopup}>
-        About us
+      <button className="pb-1" onClick={openPopup}>
+        <h1 className="flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full font-bold hover:bg-green-900">?</h1>
       </button>
       {/* AboutUsPopup component */}
       <AboutUs isOpen={isPopupOpen} onClose={closePopup} />
 
-      <h1 className="pb-8 text-4xl font-bold mb-4 text-center">Welcome to Spotivis!</h1>
+      <h1 className="pb-2 text-4xl font-bold mb-4 text-center">Welcome to Spotivis!</h1>
 
-      <h1 className="text-2xl font-bold mb-4 text-center">Select a Country</h1>
+      <div className="flex items-center justify-center mb-4 space-x-4">
+        <h1 className="text-2xl font-bold">Select a Country</h1>
+        <button className="hover:opacity-80" onClick={handleRandomCountry}>
+          <img 
+            src="https://static-00.iconduck.com/assets.00/perspective-dice-six-faces-random-icon-1024x1024-20is6x9z.png"
+            alt="random country" 
+            className="w-8 h-8"
+          />
+        </button>
+      </div>
 
       {loading && (
         <p className="text-center text-gray-500">Loading countries...</p>
@@ -93,7 +102,7 @@ export default function Home() {
 
       {!loading && !error && (
         <div className="relative">
-          <div className="flex items-center">
+          <div className="flex items-center gap-3">
             <input
               type="text"
               value={search}
@@ -107,14 +116,14 @@ export default function Home() {
                 // Find the country that matches the search query
                 const selectedCountry = filteredCountries.find(
                   (country) =>
-                    country.country_name.toLowerCase() === search.toLowerCase()
+                    country.country_name?.toLowerCase() === search.toLowerCase()
                 );
 
                 if (selectedCountry) {
-                  chooseCountry(selectedCountry.id, selectedCountry.country);
+                  chooseCountry(selectedCountry.id, selectedCountry.country_name);
                 }
               }}
-              className="border p-2 rounded w-full bg-blue-500 text-white hover:bg-blue-600"
+              className="border p-2 rounded w-full bg-green-700 text-white hover:bg-green-900"
             >
               Search Country
             </button>
@@ -126,7 +135,7 @@ export default function Home() {
                 .map((country) => (
                   <li
                     key={country.id}
-                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                    className="p-2 hover:bg-gray-700 cursor-pointer"
                     onClick={() => {
                       setSearch(country.country_name);
                       setShowDropdown(false);

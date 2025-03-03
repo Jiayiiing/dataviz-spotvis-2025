@@ -33,7 +33,7 @@
   }
 
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 0 0% 2%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -115,9 +115,10 @@
   .close-btn {
     background: transparent;
     border: none;
+    font-weight: bold;
     font-size: 18px;
     cursor: pointer;
-    color: #333;
+    color: green;
   }
   
   .popup-content {
@@ -126,7 +127,7 @@
   
   .popup-content p {
     font-size: 16px;
-    color: #555;
+    color: white;
   }
 
 }

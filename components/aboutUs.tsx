@@ -12,11 +12,11 @@ interface AboutUsPopupProps {
     <div className="popup-overlay">
       <div className="popup-container">
         <div className="popup-header">
-          <h2 className="text-center">Information and About Us</h2>
-          <button className="close-btn" onClick={onClose}>X</button>
+          <h2 className="font-bold">Information and About Us</h2>
+          <button className="close-btn" onClick={onClose}>x</button>
         </div>
         <div className="popup-content">
-          <p>Welcome to our website!</p>
+          <p>We are Spotivis!</p>
           <p></p>
         </div>
       </div>
