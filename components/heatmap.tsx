@@ -81,20 +81,34 @@ const HeatmapChart = () => {
       type: "category",
       labels: {
         style: {
-          colors: "#FFFFFF", // Change this to your desired color
-          fontSize: "12px",  // Adjust font size if needed
+          colors: "#FFFFFF", 
+          fontSize: "11px", 
         }
       }
     },
     yaxis: {
       labels: {
         style: {
-          colors: "#FFFFFF", // Different color for y-axis
-          fontSize: "12px",
+          colors: "#FFFFFF",
+          fontSize: "11px",
         }
       }
     },
-    tooltip: { enabled: false },
+    tooltip: { 
+        enabled: true,
+        followCursor: true,
+        theme: true,
+        fillSeriesColor: true,
+        style: {
+            fontSize:"14px",
+        },
+        /*
+        custom: function ({series, seriesIndex, dataPointIndex}) {
+            const value = series[seriesIndex][dataPointIndex];
+            return `<div style="padding: 5px; border-radius: 5px;"> <span style="color: black; font-weight: bold;">${value}</span> </div>`
+        },
+        */
+    },
     plotOptions: {
       heatmap: {
         radius: 0,
