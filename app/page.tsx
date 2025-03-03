@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import AboutUs from "@/components/aboutUs"
 
 export default function Home() {
   const [countries, setCountries] = useState<any[]>([]);
@@ -45,7 +46,7 @@ export default function Home() {
     } else {
       setFilteredCountries(
         countries.filter((country) =>
-          country.country.toLowerCase().includes(query)
+          country.country_name?.toLowerCase().includes(query)
         )
       );
     }
@@ -63,8 +64,24 @@ export default function Home() {
     chooseCountry(randomCountry.id, randomCountry.country);
   };
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <div className="p-4 max-w-md mx-auto absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <button onClick={openPopup}>
+        About us
+      </button>
+      {/* AboutUsPopup component */}
+      <AboutUs isOpen={isPopupOpen} onClose={closePopup} />
+
       <h1 className="pb-8 text-4xl font-bold mb-4 text-center">Welcome to Spotivis!</h1>
 
       <h1 className="text-2xl font-bold mb-4 text-center">Select a Country</h1>
@@ -90,7 +107,7 @@ export default function Home() {
                 // Find the country that matches the search query
                 const selectedCountry = filteredCountries.find(
                   (country) =>
-                    country.country.toLowerCase() === search.toLowerCase()
+                    country.country_name.toLowerCase() === search.toLowerCase()
                 );
 
                 if (selectedCountry) {
@@ -110,11 +127,11 @@ export default function Home() {
                     key={country.id}
                     className="p-2 hover:bg-gray-200 cursor-pointer"
                     onClick={() => {
-                      setSearch(country.country);
+                      setSearch(country.country_name);
                       setShowDropdown(false);
                     }}
                   >
-                    {country.country}
+                    {country.country_name}
                   </li>
                 ))
               ) : (
