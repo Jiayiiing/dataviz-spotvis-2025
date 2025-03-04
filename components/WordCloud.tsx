@@ -7,6 +7,7 @@ import cloud from "d3-cloud";
 type Word = {
   text: string;
   value: number;
+  id: number;
   x?: number;
   y?: number;
   rotate?: number;
@@ -84,6 +85,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, width = 500, height = 300 }
           })
           .on("click", function (event, d) {
             console.log(d.text);
+            console.log(d.id)
             d3.select(this).classed("word-selected", !d3.select(this).classed("word-selected"));
           });
       });

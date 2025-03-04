@@ -28,7 +28,7 @@ type Ranking = {
   snapshot_date: string;
   Songs: Song;
 };
-type Word = { text: string; value: number };
+type Word = { text: string; value: number; id: number };
 type Artist = { id: number, name: string };
 type SongArtist = { Artists: Artist };
 type SongsContainer = { [key: string]: SongArtist[] | unknown };
@@ -37,8 +37,9 @@ type SeriesEntry = {x: string, y: number};
 type Series = {name: string, data: SeriesEntry[]}
 
 // Calculate artist popularity for WordCloud
-const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
-  const artistScores: Record<string, number> = {};
+const calculateArtistPopularity = (data: DataEntry[]): Word[] => {  
+  //const artistScores: Record<string, number> = {};
+  const artistScores = new Map<number, { name: string; score: number }>();
 
   data.forEach((entry) => {
     const points = 51 - entry.daily_rank;
@@ -49,14 +50,26 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
     if (!artistArray) return;
 
     artistArray.forEach((artistEntry: SongArtist) => {
-      const artistName = artistEntry.Artists.name;
-      artistScores[artistName] = (artistScores[artistName] || 0) + points;
+      // Old version:
+      //const artistName = artistEntry.Artists.name;
+      //artistScores[artistName] = (artistScores[artistName] || 0) + points;
+
+      const { id, name } = artistEntry.Artists; // Extract artist ID & name
+
+      // If the artist is not in the map, initialize them with a score of 0
+      if (!artistScores.has(id)) {
+        artistScores.set(id, { name, score: 0 });
+      }
+
+      // Increment the artist's score
+      artistScores.get(id)!.score += points;
     });
   });
 
-  return Object.entries(artistScores).map(([artist, score]) => ({
-    text: artist,
-    value: score,
+  return Array.from(artistScores, ([id, { name, score }]) => ({
+    id, 
+    text: name, 
+    value: score, 
   }));
 };
 
