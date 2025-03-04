@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { getAlbumCover } from "@/utils/SpotifyAPI/spotifyApi";
+import { useState, useEffect} from "react";
 
 type Song = {
   name: string;
@@ -37,6 +38,30 @@ export default function SongList({
 }: SongListProps) {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const uniqueDates = Array.from(new Set(rankings.map((ranking) => ranking.snapshot_date)));
+  const [albumCovers, setAlbumCovers] = useState<Record<string, string | null>>({});
+
+  /*
+  useEffect(() => {
+    const fetchAlbumCovers = async () => {
+      const uniqueIds = Array.from(new Set(rankings.map((entry) => entry.spotify_id))); // Unique IDs
+      const covers: Record<string, string | null> = {};
+  
+      await Promise.all(
+        uniqueIds
+          .filter((id) => !albumCovers[id]) // Only fetch if not already in state
+          .map(async (spotifyId) => {
+            const cover = await getAlbumCover(spotifyId);
+            covers[spotifyId] = cover;
+          })
+      );
+  
+      setAlbumCovers((prevCovers) => ({ ...prevCovers, ...covers }));
+    };
+  
+    fetchAlbumCovers();
+  }, [rankings]);
+  */
+  
   const handleCheckboxChange = (song: Song, isChecked: boolean) => {
     if (isChecked) {
       // Add song to selectedSongs when checked
@@ -98,14 +123,14 @@ export default function SongList({
                     />
                   </td>
                   <td className="border p-2">
-                    {ranking.albumCover ? (
+                    {albumCovers[ranking.spotify_id] ? (
                       <img
-                        src={ranking.albumCover}
+                        src={albumCovers[ranking.spotify_id]!}
                         alt="Album Cover"
                         className="w-12 h-12 rounded"
                       />
                     ) : (
-                      <span>No Image</span>
+                      <span>Loading...</span>
                     )}
                   </td>
                   <td className="border p-2">{ranking.Songs.name}</td>
