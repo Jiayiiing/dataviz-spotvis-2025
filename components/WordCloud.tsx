@@ -13,13 +13,17 @@ type Word = {
   rotate?: number;
 };
 
+type Artist = { id: number, name: string };
+
 type WordCloudProps = {
   data: Word[];
+  setSelectedArtists: React.Dispatch<React.SetStateAction<Artist[]>>;
+  selectedArtists: Artist[];
   width?: number;
   height?: number;
 };
 
-const WordCloud: React.FC<WordCloudProps> = ({ data, width = 500, height = 300 }) => {
+const WordCloud: React.FC<WordCloudProps> = ({ setSelectedArtists, selectedArtists, data, width = 500, height = 300 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
@@ -85,8 +89,18 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, width = 500, height = 300 }
           })
           .on("click", function (event, d) {
             console.log(d.text);
-            console.log(d.id)
             d3.select(this).classed("word-selected", !d3.select(this).classed("word-selected"));
+            const artist: Artist = { id: d.id, name: d.text };
+            const isSelected = selectedArtists.some((a) => a.id === artist.id);
+
+            if (isSelected) {
+              // Deselect artist
+              setSelectedArtists((prevSelected) =>
+                prevSelected.filter((a) => a.id !== artist.id)
+              );
+            } else {
+              setSelectedArtists((prevSelected) => [...prevSelected, artist]);
+            }
           });
       });
 

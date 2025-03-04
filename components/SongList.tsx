@@ -28,17 +28,21 @@ type Ranking = {
 type SongListProps = {
   rankings: Ranking[]; // Array of Song objects
   selectedSongs: Song[]; // Array of selected Song objects
+  selectedArtists: Artist[];
   onSelectionChange: (selectedSongs: Song[]) => void; // Function to update the selected songs
 };
 
 export default function SongList({
   rankings,
   selectedSongs,
+  selectedArtists,
   onSelectionChange,
 }: SongListProps) {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const uniqueDates = Array.from(new Set(rankings.map((ranking) => ranking.snapshot_date)));
   const [albumCovers, setAlbumCovers] = useState<Record<string, string | null>>({});
+  console.log(" selected artists ", selectedArtists);
+
 
   /*
   useEffect(() => {
@@ -64,15 +68,16 @@ export default function SongList({
   
   const handleCheckboxChange = (song: Song, isChecked: boolean) => {
     if (isChecked) {
-      // Add song to selectedSongs when checked
-      onSelectionChange([...selectedSongs, song]);
+      // Check if the song is already selected
+      if (!selectedSongs.some((s) => s.spotify_id === song.spotify_id)) {
+        onSelectionChange([...selectedSongs, song]);
+      }
     } else {
-      // Remove song from selectedSongs when unchecked
       onSelectionChange(
         selectedSongs.filter((s) => s.spotify_id !== song.spotify_id)
       );
     }
-    console.log(selectedSongs)
+    console.log("Selected songs: " , selectedSongs)
   };
 
   return (
@@ -111,6 +116,13 @@ export default function SongList({
                 if (seenSongs.has(ranking.spotify_id)) return false; // Skip duplicates
                 seenSongs.add(ranking.spotify_id); // Mark as seen
                 return true;
+              })
+              .filter((ranking) => {
+                // Filter songs based on selected artists
+                if (selectedArtists.length === 0) return true; // If no artists are selected, show all songs
+                return ranking.Songs.Song_artists.some((songArtist) =>
+                  selectedArtists.some((artist) => artist.id === songArtist.Artists.id)
+                );
               })
               .map((ranking) => (
                 <tr key={ranking.spotify_id}>

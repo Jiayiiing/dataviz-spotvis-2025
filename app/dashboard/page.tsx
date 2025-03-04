@@ -197,7 +197,12 @@ export default function RankingsPage() {
       <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-lg mt-6 h-[70vh] overflow-auto">
         {/* WordCloud */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
-          <WordCloud data={artistsRankings} width={500} height={250} />
+          <WordCloud  
+          selectedArtists={selectedArtists}
+          setSelectedArtists={setSelectedArtists} 
+          data={artistsRankings} 
+          width={500} 
+          height={250} />
         </div>
 
         {/* Heatmap */}
@@ -226,6 +231,7 @@ export default function RankingsPage() {
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] overflow-auto">
           <SongList
             rankings={rankings}
+            selectedArtists={selectedArtists}
             selectedSongs={selectedSongs}
             onSelectionChange={setSelectedSongs}
           />
