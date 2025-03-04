@@ -33,6 +33,8 @@ type Artist = { id: number, name: string };
 type SongArtist = { Artists: Artist };
 type SongsContainer = { [key: string]: SongArtist[] | unknown };
 type DataEntry = { daily_rank: number; Songs: SongsContainer };
+type SeriesEntry = {x: string, y: number};
+type Series = {name: string, data: SeriesEntry[]}
 
 // Calculate artist popularity for WordCloud
 const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
@@ -57,6 +59,33 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
     value: score,
   }));
 };
+
+const formatHeatmapData = (data: Ranking[]): Series[] => {
+  const artistMap = new Map();
+  //const allDates = new Set(data.map((entry) => entry.snapshot_date));
+
+  const allDates = Array.from(new Set(data.map(({ snapshot_date }) => snapshot_date)))
+    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+  data.forEach((entry) => {
+    const artist_name = entry.Songs.Song_artists[0].Artists.name;
+    if (!artistMap.has(artist_name)) {
+      artistMap.set(artist_name, new Map());
+    }
+    artistMap.get(artist_name).set(entry.snapshot_date, entry.daily_rank);
+  });
+
+  const formatedData: Series[] = Array.from(artistMap, ([artist, rankMap]) => ({
+      name: artist,
+      data: Array.from(allDates, (date) => ({
+          x: date,
+          y: rankMap.get(date) ?? null,
+      })),
+  }));
+
+  console.log("Formatted Heatmap Data:", formatedData);
+  return formatedData;
+} 
 
 export default function RankingsPage() {
   const searchParams = useSearchParams();
@@ -121,8 +150,12 @@ export default function RankingsPage() {
     }
   };
 
+  // Data for the word cloud
   const artistsRankings = calculateArtistPopularity(rankings);
   console.log("Rankings Result:", artistsRankings);
+
+  // Data for the heatmap
+  const heatmapData = formatHeatmapData(rankings);
 
   return (
     <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
@@ -156,7 +189,7 @@ export default function RankingsPage() {
 
         {/* Heatmap */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
-          <HeatmapChart />
+          <HeatmapChart data={heatmapData} width={500} height={500}/>
         </div>
 
         {/* Radar Chart with Selected Song IDs */}

@@ -2,75 +2,23 @@
 
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
-import { Radius } from "lucide-react";
-import { Suspense } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+type SeriesEntry = {x: string, y: number | null};
 
-/*
-const getColorByRank = (rank: number) => {
-    const baseColor = [255, 50, 50]; // Red base (R, G, B)
-    const intensity = 255; // Normalize intensity (1 for rank 1, ~0 for rank 50)
-    return `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${intensity})`;
-  };
-*/
-
-
-const getColorByRank = (rank: number | null) => {
-    if (rank === null) return "white"; // Missing data = white
-    if (rank <= 10) return "red";
-    if (rank <= 30) return "orange";
-    return "yellow";
+type Series = {
+    name: string;
+    data: SeriesEntry[];
   };
 
+type HeatMapProps = {
+    data: Series[];
+    width?: number;
+    height?: number;
+  };
 
-const HeatmapChart = () => {
-  const [chartData, setChartData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const countryId = searchParams.get('countryId');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(
-            `/api/heatmap?country=${countryId}&startDate=2024-02-19&endDate=2024-02-25`
-          );
-        const rawData = await res.json();
-
-        const artistMap = new Map();
-        const allDates = new Set(rawData.map(({ snapshot_date }: any) => snapshot_date));
-
-        rawData.forEach(({ artist_name, snapshot_date, daily_rank }: any) => {
-            if (!artistMap.has(artist_name)) {
-                artistMap.set(artist_name, new Map());
-            }
-            artistMap.get(artist_name).set(snapshot_date, daily_rank);
-        });
-
-        const formatedData = Array.from(artistMap, ([artist, rankMap]) => ({
-            name: artist,
-            data: Array.from(allDates, (date) => ({
-                x: date as any,
-                y: rankMap.get(date) ?? null,
-            })),
-        }));
-
-        setChartData(formatedData as any);
-        console.log("Formatted Heatmap Data:", formatedData);
-        
-      } catch (error) {
-        console.error("Error fetching heatmap data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [countryId]);
-
+const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) => {
   //const colors = chartData.map(() => getRandomColor());
 
   // ApexCharts options
@@ -97,7 +45,6 @@ const HeatmapChart = () => {
     tooltip: { 
         enabled: true,
         followCursor: true,
-        theme: true,
         fillSeriesColor: true,
         style: {
             fontSize:"14px",
@@ -148,10 +95,13 @@ const HeatmapChart = () => {
     colors: ["ff0000"],
     */
 
+if (!data || data.length === 0) {
+    return <p>Loading heatmap data...</p>;
+    }
 
   return (
     <div>
-      {loading ? <p>Loading heatmap...</p> : <Chart options={options} series={chartData} type="heatmap" height={600} />}
+        <Chart options={options} series={data} type="heatmap" height={height} width={width} />
     </div>
   );
 };
