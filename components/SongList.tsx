@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 type Song = {
   name: string;
   spotify_id: string;
@@ -8,8 +10,11 @@ type Song = {
   valence: number;
   acousticness: number;
   instrumentalness: number;
-  liveness: number; };
+  liveness: number; 
+  Song_artists: SongArtist[];};
 
+type Artist = { id: number, name: string };
+type SongArtist = { Artists: Artist };
 
 type Ranking = {
   spotify_id: string;
@@ -30,6 +35,8 @@ export default function SongList({
   selectedSongs,
   onSelectionChange,
 }: SongListProps) {
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const uniqueDates = Array.from(new Set(rankings.map((ranking) => ranking.snapshot_date)));
   const handleCheckboxChange = (song: Song, isChecked: boolean) => {
     if (isChecked) {
       // Add song to selectedSongs when checked
@@ -46,12 +53,27 @@ export default function SongList({
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Song List</h2>
+
+      {/* Date Selector */}
+      <div className="mb-4">
+        <label className="mr-2">Select Date:</label>
+        <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="p-2 border rounded">
+          <option value="">All Dates</option>
+          {uniqueDates.map((date) => (
+            <option key={date} value={date}>
+              {date}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-dark-200">
             <th className="border p-2">Select</th>
             <th className="border p-2">Album</th>
             <th className="border p-2">Song Name</th>
+            <th className="border p-2">Artists</th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +81,7 @@ export default function SongList({
             const seenSongs = new Set(); // Store unique song IDs
 
             return rankings
+              .filter((ranking) => !selectedDate || ranking.snapshot_date === selectedDate)
               .filter((ranking) => {
                 if (seenSongs.has(ranking.spotify_id)) return false; // Skip duplicates
                 seenSongs.add(ranking.spotify_id); // Mark as seen
@@ -86,6 +109,11 @@ export default function SongList({
                     )}
                   </td>
                   <td className="border p-2">{ranking.Songs.name}</td>
+                  <td className="border p-2">
+                    {ranking.Songs.Song_artists
+                      .map((songArtist) => songArtist.Artists.name)
+                      .join(", ") || "Unknown Artist"}
+                  </td>
                 </tr>
               ));
           })()}
