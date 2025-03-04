@@ -3,7 +3,13 @@
 type Song = {
   name: string;
   spotify_id: string;
-};
+  energy: number;
+  danceability: number;
+  valence: number;
+  acousticness: number;
+  instrumentalness: number;
+  liveness: number; };
+
 
 type Ranking = {
   spotify_id: string;
@@ -34,6 +40,7 @@ export default function SongList({
         selectedSongs.filter((s) => s.spotify_id !== song.spotify_id)
       );
     }
+    console.log(selectedSongs)
   };
 
   return (

@@ -30,9 +30,17 @@ export async function GET(req: NextRequest) {
       daily_rank,
       snapshot_date,
       Songs:spotify_id (
+        spotify_id,
         name,
+        energy,
+        danceability,
+        valence,
+        acousticness,
+        instrumentalness,
+        liveness,
           Song_artists (
             Artists (
+              id,
               name
             )
           )

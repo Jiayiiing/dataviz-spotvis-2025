@@ -11,7 +11,16 @@ import { useSearchParams } from "next/navigation";
 import BackArrow from "@/components/backarrow";
 
 // Type definitions
-type Song = { name: string; spotify_id: string };
+type Song = { name: string; 
+  spotify_id: string; 
+  energy: number;
+  danceability: number;
+  valence: number;
+  acousticness: number;
+  instrumentalness: number;
+  liveness: number; 
+  Song_artists: SongArtist[];
+};
 type Ranking = {
   spotify_id: string;
   daily_rank: number;
@@ -20,7 +29,7 @@ type Ranking = {
   Songs: Song;
 };
 type Word = { text: string; value: number };
-type Artist = { name: string };
+type Artist = { id: number, name: string };
 type SongArtist = { Artists: Artist };
 type SongsContainer = { [key: string]: SongArtist[] | unknown };
 type DataEntry = { daily_rank: number; Songs: SongsContainer };
@@ -57,6 +66,7 @@ export default function RankingsPage() {
   const [endDate, setEndDate] = useState<string>("");
   const [rankings, setRankings] = useState<Ranking[]>([]);
   const [selectedSongs, setSelectedSongs] = useState<Song[]>([]);
+  const [selectedArtists, setSelectedArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [minDate, setMinDate] = useState<string>("");
@@ -102,7 +112,8 @@ export default function RankingsPage() {
         throw new Error(data.error || "Failed to fetch rankings");
 
       setRankings(data);
-      console.log(data);
+      console.log("Data fetched")
+      //console.log(data);
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
     } finally {
@@ -162,7 +173,7 @@ export default function RankingsPage() {
 
           {/* Radar Chart */}
           <h1 className="text-lg font-semibold mb-2">Radar Chart</h1>
-          <Radartest />
+          <Radartest  songsData={selectedSongs}/>
         </div>
 
         {/* Song List */}

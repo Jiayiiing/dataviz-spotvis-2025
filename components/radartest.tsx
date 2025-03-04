@@ -23,30 +23,19 @@ ChartJS.register(
   Legend
 );
 
-export default function Radartest() {
-  const [data, setData] = useState<any[] | null>(null);
-  const [songId1, setSongId1] = useState("");
-  const [songId2, setSongId2] = useState("");
-  const [loading, setLoading] = useState(false);
-  const supabase = createClient();
+export default function Radartest({ songsData }: { songsData: any[] }) {
+  const [data, setData] = useState<any[]>([]);
 
-  const getData = async () => {
-    setLoading(true);
-    const { data: supabasedata, error } = await supabase
-      .from("Spotivis")
-      .select(
-        "spotify_id, name, energy, danceability, valence, acousticness, instrumentalness, liveness"
-      )
-      .in("spotify_id", [songId1, songId2]);
-
-    if (error) {
-      console.error("Error fetching data:", error);
-      setLoading(false);
+  useEffect(() => {
+    console.log("Radartest received songs: ", songsData)
+    if (!songsData || songsData.length === 0) {
+      setData([]);
       return;
     }
 
+    // Remove duplicates by `spotify_id`
     const uniqueData = Object.values(
-      supabasedata.reduce<Record<string, (typeof supabasedata)[number]>>(
+      songsData.reduce<Record<string, (typeof songsData)[number]>>(
         (acc, song) => {
           acc[song.spotify_id] = song;
           return acc;
@@ -54,6 +43,8 @@ export default function Radartest() {
         {}
       )
     );
+
+    // Format data for radar chart
     const formattedData = uniqueData.map((song) => ({
       label: song.name,
       data: [
@@ -74,8 +65,7 @@ export default function Radartest() {
     }));
 
     setData(formattedData);
-    setLoading(false);
-  };
+  }, [songsData]); // Update chart when `songsData` changes
 
   const chartData = {
     labels: [
@@ -86,67 +76,37 @@ export default function Radartest() {
       "Instrumentalness",
       "Liveness",
     ],
-    datasets: data || [],
+    datasets: data,
   };
 
   return (
     <div>
-      <div>
-        <input
-          type="text"
-          placeholder="Place first song ID here"
-          value={songId1}
-          onChange={(e) => setSongId1(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Place second song ID here"
-          value={songId2}
-          onChange={(e) => setSongId2(e.target.value)}
-        />
-        <div className="flex justify-center">
-          <button
-            onClick={getData}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Fetch Data
-          </button>
-        </div>
-      </div>
-
-      {loading ? (
-        <p>Loading...</p>
+      {data.length === 0 ? (
+        <p>No data available</p>
       ) : (
-        data && (
-          <Radar
-            data={{
-              ...chartData,
-              datasets: chartData.datasets.map((dataset) => ({
-                ...dataset,
-              })),
-            }}
-            options={{
-              elements: {
-                line: {
-                  borderWidth: 3, // Adjusts line thickness
+        <Radar
+          data={chartData}
+          options={{
+            elements: {
+              line: {
+                borderWidth: 3, // Adjusts line thickness
+              },
+            },
+            scales: {
+              r: {
+                grid: {
+                  color: "rgba(145, 127, 127, 0.3)", // Grid lines color
+                },
+                angleLines: {
+                  color: "white", // Angle lines color
+                },
+                ticks: {
+                  color: "white", // Labels (numbers) color
                 },
               },
-              scales: {
-                r: {
-                  grid: {
-                    color: "rgba(145, 127, 127, 0.3)", // Makes grid lines white-ish
-                  },
-                  angleLines: {
-                    color: "white", // Makes angle lines white
-                  },
-                  ticks: {
-                    color: "white", // Makes labels (numbers) white
-                  },
-                },
-              },
-            }}
-          />
-        )
+            },
+          }}
+        />
       )}
     </div>
   );
