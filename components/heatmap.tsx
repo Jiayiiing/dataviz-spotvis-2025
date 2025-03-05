@@ -36,6 +36,7 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
     dataLabels: { enabled: false },
     xaxis: { 
       type: "category",
+      tooltip: { enabled: false },
       labels: {
         style: {
           colors: "#FFFFFF", 
@@ -58,6 +59,12 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
         enabled: true,
         followCursor: true,
         fillSeriesColor: true,
+        y: {
+          formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+            const xvalue = w.globals.labels[dataPointIndex];
+            return `Date: ${xvalue}<br>Rank: ${value}`;
+          }
+        },
         style: {
             fontSize:"14px",
         },
@@ -89,6 +96,9 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
             return null;
           }).filter(Boolean) // Filters out any null values
         : [],
+    },
+    legend: {
+      position: "right",
     },
     plotOptions: {
       heatmap: {
