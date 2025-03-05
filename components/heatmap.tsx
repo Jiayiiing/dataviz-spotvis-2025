@@ -30,6 +30,12 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
   const selectedNames = highlightedArtists.map(artist => artist.name);
   console.log("HIGHLIGHTED ARTISTS", selectedNames)
 
+  const reorderedData = [
+    ...data.filter(entry => !selectedNames.includes(entry.name)),
+    ...data.filter(entry => selectedNames.includes(entry.name)) 
+  ];
+  
+
   // ApexCharts options
   const options: ApexCharts.ApexOptions = {
     chart: { type: "heatmap" },
@@ -40,7 +46,8 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
       labels: {
         style: {
           colors: "#FFFFFF", 
-          fontSize: "11px", 
+          fontSize: "11px",
+          fontWeight: "bold",
         }
       }
     },
@@ -49,9 +56,10 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
         offsetY: 0,
         style: {
           colors: selectedNames.length > 0
-            ? data.map(entry => selectedNames.includes(entry.name) ? "#A020F0" : "#FFFFFF") // Red color for selected artists
+            ? reorderedData.map(entry => selectedNames.includes(entry.name) ? "#1db954" : "#FFFFFF") // Red color for selected artists
             : "#FFFFFF",  // Default color
-          fontSize: "11px"
+          fontSize: "11px",
+          fontWeight: "bold",
         }
       }
     },
@@ -75,28 +83,6 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
         },
         */
     },
-    stroke: {
-      //colors: selectedNames.length > 0 ? data.map(entry => selectedNames.includes(entry.name) ? ["#A020F0"] : ["#FFFFFF"]) : ["#FFFFFF"],
-      show: true,
-    },
-    annotations: {
-      yaxis: selectedNames.length > 0
-        ? selectedNames.map(name => {
-            const entryIndex = data.findIndex(entry => entry.name === name);
-  
-            if (entryIndex !== -1) {
-              return {
-                y: entryIndex,  // Row corresponding to selected name
-                stroke: {
-                  color: "#A020F0",  // Stroke (border) color for the selected row
-                  width: 3,  // Stroke width for the selected row
-                }
-              };
-            }
-            return null;
-          }).filter(Boolean) // Filters out any null values
-        : [],
-    },
     legend: {
       position: "right",
     },
@@ -116,7 +102,7 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
             { from: 21, to: 30, color: "#FFB300" }, // Yellow (middle)
             { from: 31, to: 40, color: "#FFA726" }, // Orange
             { from: 41, to: 50, color: "#FF0000" }, // Red (bottom)
-            { from: null, to: null, color: "#000000", name: "Outside top 50"},
+            { from: 0, to: 0, color: "#000000", name: "Outside top 50"},
           ],
         },
       },
@@ -130,7 +116,7 @@ if (!data || data.length === 0) {
 
   return (
     <div>
-        <Chart options={options} series={data} type="heatmap" height={height} width={width} />
+        <Chart options={options} series={reorderedData} type="heatmap" height={height} width={width} />
     </div>
   );
 };

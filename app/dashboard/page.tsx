@@ -207,7 +207,7 @@ export default function RankingsPage() {
         </div>
 
         {/* Heatmap */}
-        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
+        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-start overflow-auto">
           <HeatmapChart data={heatmapData.reverse()} width={500} height={1000} selectedArtists={selectedArtists}/>
         </div>
 
