@@ -36,6 +36,7 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) =
     },
     yaxis: {
       labels: {
+        offsetY: 0,
         style: {
           colors: "#FFFFFF",
           fontSize: "11px",
@@ -58,21 +59,21 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) =
     },
     plotOptions: {
       heatmap: {
-        radius: 0,
+        radius: 5,
         shadeIntensity: 0.5,
-        useFillColorAsStroke: true,
+        useFillColorAsStroke: false,
         distributed: false,
         colorScale: {
           inverse: true,
           min: 1,
           max: 50,
           ranges: [
-            { from: 1, to: 10, color: "#1DB954" },
-            { from: 11, to: 20, color: "#6FCC9B" },
-            { from: 21, to: 30, color: "#A8E3BF" },
-            { from: 31, to: 40, color: "#D4F1DF" },
-            { from: 41, to: 50, color: "#FFFFFF" }, 
-            { from: 51, to: 1000, color: "#FFFFFF" },
+            { from: 1, to: 10, color: "#1DB954" },  // Spotify green (top)
+            { from: 11, to: 20, color: "#6FCC9B" }, // Light green
+            { from: 21, to: 30, color: "#FFB300" }, // Yellow (middle)
+            { from: 31, to: 40, color: "#FFA726" }, // Orange
+            { from: 41, to: 50, color: "#FF0000" }, // Red (bottom)
+            //{ from: 51, to: 1000, color: "#000000" },
           ],
         },
       },
