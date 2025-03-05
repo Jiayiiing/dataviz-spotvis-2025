@@ -24,8 +24,8 @@ export default function DatePicker({
   dateRangeLoading,
   fetchRankings,
 }: DatePickerProps) {
-  const [rangeType, setRangeType] = useState<"Day" | "Week" | "Month" | "Year">(
-    "Day"
+  const [rangeType, setRangeType] = useState<"Week" | "Month" | "Year">(
+    "Week"
   );
 
   // Function to update endDate based on range selection
@@ -67,23 +67,20 @@ export default function DatePicker({
       <input
         type="date"
         value={startDate}
-        min={minDate}
+        min={startDate || minDate}
         max={maxDate}
         onChange={(e) => setStartDate(e.target.value)}
         className="border p-2 rounded text-white"
-        disabled={dateRangeLoading}
       />
 
       {/* Dropdown for selecting range */}
       <select
         value={rangeType}
         onChange={(e) =>
-          setRangeType(e.target.value as "Day" | "Week" | "Month" | "Year")
+          setRangeType(e.target.value as "Week" | "Month" | "Year")
         }
         className="border p-2 rounded text-white"
-        disabled={dateRangeLoading}
       >
-        <option value="Day">Day</option>
         <option value="Week">Week</option>
         <option value="Month">Month</option>
         <option value="Year">Year</option>

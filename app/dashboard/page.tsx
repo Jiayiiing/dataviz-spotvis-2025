@@ -105,41 +105,18 @@ export default function RankingsPage() {
   const searchParams = useSearchParams();
   const countryId = searchParams.get("countryId");
 
-  const [startDate, setStartDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("2023-10-18");
   const [endDate, setEndDate] = useState<string>("");
   const [rankings, setRankings] = useState<Ranking[]>([]);
   const [selectedSongs, setSelectedSongs] = useState<Song[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [minDate, setMinDate] = useState<string>("");
-  const [maxDate, setMaxDate] = useState<string>("");
   const [dateRangeLoading, setDateRangeLoading] = useState<boolean>(true);
 
-  // Fetch available date range for the date picker
-  useEffect(() => {
-    const fetchDateRange = async () => {
-      try {
-        const response = await fetch("/api/rankings-dates");
-        const data = await response.json();
-        if (response.ok) {
-          setMinDate(data.minDate);
-          setMaxDate(data.maxDate);
-          setStartDate(data.minDate);
-          setEndDate(data.maxDate);
-        } else {
-          throw new Error(data.error || "Failed to fetch date range");
-        }
-      } catch (err: any) {
-        setError(err.message || "An unexpected error occurred");
-      } finally {
-        setDateRangeLoading(false);
-      }
-    };
+  const minDate = "2023-10-18";
+  const maxDate = "2025-02-17";
 
-    fetchDateRange();
-  }, []);
-  
   // Fetch rankings data
   const fetchRankings = async () => {
     if (!startDate || !endDate) return;
