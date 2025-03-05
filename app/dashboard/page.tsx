@@ -172,7 +172,7 @@ export default function RankingsPage() {
       {error && <p className="text-red-500 font-semibold">{error}</p>}
 
       {/* 2x2 Grid Layout (Scrollable) */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-lg mt-6 h-[70vh] overflow-auto">
+      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-3xl mt-6 h-[75vh] overflow-auto">
         {/* WordCloud */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
           <WordCloud  
@@ -188,19 +188,8 @@ export default function RankingsPage() {
           <HeatmapChart data={heatmapData} width={500} height={900}/>
         </div>
 
-        {/* Radar Chart with Selected Song IDs */}
+        {/* Radar Chart */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
-          {/* Selected Song IDs */}
-          <div className="mb-4 text-center border-b pb-2 w-full">
-            <p className="text-sm text-gray-600">
-              SongID 1: 003vvx7Niy0yvhvHt4a68B
-            </p>
-            <p className="text-sm text-gray-600">
-              SongID 2: 00R2eVdkti9OZboefW2f4i
-            </p>
-          </div>
-
-          {/* Radar Chart */}
           <h1 className="text-lg font-semibold mb-2">Radar Chart</h1>
           <Radartest  songsData={selectedSongs}/>
         </div>
@@ -215,18 +204,6 @@ export default function RankingsPage() {
           />
         </div>
       </div>
-      
-      {/* Selected Songs List (Debugging) 
-      {selectedSongs.length > 0 && (
-        <div className="mt-6 p-4 border rounded bg-gray-100">
-          <h2 className="text-lg font-semibold mb-2">Selected Songs:</h2>
-          <ul className="list-disc list-inside">
-            {selectedSongs.map((song, index) => (
-              <li key={index}>{song.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}*/}
     </div>
   );
 }
