@@ -101,6 +101,7 @@ const formatHeatmapData = (data: Ranking[]): Series[] => {
 } 
 
 export default function RankingsPage() {
+
   const searchParams = useSearchParams();
   const countryId = searchParams.get("countryId");
 
@@ -138,7 +139,7 @@ export default function RankingsPage() {
 
     fetchDateRange();
   }, []);
-
+  
   // Fetch rankings data
   const fetchRankings = async () => {
     if (!startDate || !endDate) return;
@@ -237,7 +238,7 @@ export default function RankingsPage() {
           />
         </div>
       </div>
-
+      
       {/* Selected Songs List (Debugging) 
       {selectedSongs.length > 0 && (
         <div className="mt-6 p-4 border rounded bg-gray-100">
