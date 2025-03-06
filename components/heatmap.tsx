@@ -6,20 +6,35 @@ import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type SeriesEntry = {x: string, y: number | null};
-
 type Series = {
     name: string;
     data: SeriesEntry[];
   };
 
+type Artist = { id: number, name: string };
 type HeatMapProps = {
     data: Series[];
     width?: number;
     height?: number;
+    selectedArtists: Artist[];
   };
 
-const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) => {
-  //const colors = chartData.map(() => getRandomColor());
+const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, selectedArtists }) => {
+
+  const [highlightedArtists, setHighlightedArtists] = useState(selectedArtists);
+
+  useEffect(() => {
+    setHighlightedArtists(selectedArtists);
+  }, [selectedArtists]);
+
+  const selectedNames = highlightedArtists.map(artist => artist.name);
+  console.log("HIGHLIGHTED ARTISTS", selectedNames)
+
+  const reorderedData = [
+    ...data.filter(entry => !selectedNames.includes(entry.name)),
+    ...data.filter(entry => selectedNames.includes(entry.name)) 
+  ];
+  
 
   // ApexCharts options
   const options: ApexCharts.ApexOptions = {
@@ -27,10 +42,12 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) =
     dataLabels: { enabled: false },
     xaxis: { 
       type: "category",
+      tooltip: { enabled: false },
       labels: {
         style: {
           colors: "#FFFFFF", 
-          fontSize: "11px", 
+          fontSize: "11px",
+          fontWeight: "bold",
         }
       }
     },
@@ -38,8 +55,11 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) =
       labels: {
         offsetY: 0,
         style: {
-          colors: "#FFFFFF",
+          colors: selectedNames.length > 0
+            ? reorderedData.map(entry => selectedNames.includes(entry.name) ? "#1db954" : "#FFFFFF") // Red color for selected artists
+            : "#FFFFFF",  // Default color
           fontSize: "11px",
+          fontWeight: "bold",
         }
       }
     },
@@ -47,6 +67,12 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) =
         enabled: true,
         followCursor: true,
         fillSeriesColor: true,
+        y: {
+          formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+            const xvalue = w.globals.labels[dataPointIndex];
+            return `Date: ${xvalue}<br>Rank: ${value}`;
+          }
+        },
         style: {
             fontSize:"14px",
         },
@@ -57,14 +83,17 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) =
         },
         */
     },
+    legend: {
+      position: "right",
+    },
     plotOptions: {
       heatmap: {
         radius: 5,
-        shadeIntensity: 0.5,
+        shadeIntensity: 0.75,
         useFillColorAsStroke: false,
         distributed: false,
         colorScale: {
-          inverse: true,
+          inverse: false,
           min: 1,
           max: 50,
           ranges: [
@@ -73,28 +102,13 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=500 }) =
             { from: 21, to: 30, color: "#FFB300" }, // Yellow (middle)
             { from: 31, to: 40, color: "#FFA726" }, // Orange
             { from: 41, to: 50, color: "#FF0000" }, // Red (bottom)
-            //{ from: 51, to: 1000, color: "#000000" },
+            { from: 0, to: 0, color: "#000000", name: "Outside top 50"},
           ],
         },
       },
     },
   };
   
-  
-    /*
-    plotOptions: {
-        heatmap: {
-            colorScale: {
-                ranges: [
-                    {from: 1, to: 10, color:"red"},
-                    {from: 11, to: 30, color:"orange"},
-                    {from: 31, to: 50, color:"yellow"},
-                ],
-            },
-        },
-    },
-    colors: ["ff0000"],
-    */
 
 if (!data || data.length === 0) {
     return <p>Loading heatmap data...</p>;
@@ -102,7 +116,7 @@ if (!data || data.length === 0) {
 
   return (
     <div>
-        <Chart options={options} series={data} type="heatmap" height={height} width={width} />
+        <Chart options={options} series={reorderedData} type="heatmap" height={height} width={width} />
     </div>
   );
 };
