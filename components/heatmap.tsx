@@ -19,7 +19,7 @@ type HeatMapProps = {
     selectedArtists: Artist[];
   };
 
-const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, selectedArtists }) => {
+const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArtists }) => {
 
   const [highlightedArtists, setHighlightedArtists] = useState(selectedArtists);
 
@@ -38,7 +38,7 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width=500, height=1000, se
 
   // ApexCharts options
   const options: ApexCharts.ApexOptions = {
-    chart: { type: "heatmap" },
+    chart: { type: "heatmap", toolbar: { show: false } },
     dataLabels: { enabled: false },
     xaxis: { 
       type: "category",
