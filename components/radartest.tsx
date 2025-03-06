@@ -1,6 +1,5 @@
 "use client"; // Add this at the very top
 
-import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { Radar } from "react-chartjs-2";
 import {
@@ -25,13 +24,17 @@ ChartJS.register(
 
 export default function Radartest({ songsData }: { songsData: any[] }) {
   const [data, setData] = useState<any[]>([]);
+  const [colorMap, setColorMap] = useState<Record<string, { borderColor: string; backgroundColor: string }>>({});
 
   useEffect(() => {
-    console.log("Radartest received songs: ", songsData)
+    //console.log("Radartest received songs: ", songsData);
     if (!songsData || songsData.length === 0) {
       setData([]);
       return;
     }
+
+    // Create a copy of the existing color map to persist colors
+    const newColorMap = { ...colorMap };
 
     // Remove duplicates by `spotify_id`
     const uniqueData = Object.values(
@@ -43,6 +46,22 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
         {}
       )
     );
+
+    // Generate colors only for new songs
+    uniqueData.forEach((song) => {
+      if (!newColorMap[song.spotify_id]) {
+        const borderColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+          Math.random() * 255
+        )}, ${Math.floor(Math.random() * 255)})`;
+        newColorMap[song.spotify_id] = {
+          borderColor,
+          backgroundColor: borderColor.replace("rgb", "rgba").replace(")", ", 0.2)"),
+        };
+      }
+    });
+
+    // Store the updated color map
+    setColorMap(newColorMap);
 
     // Format data for radar chart
     const formattedData = uniqueData.map((song) => ({
@@ -56,12 +75,12 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
         song.liveness,
       ],
       fill: true,
-      backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`,
-      borderColor: `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`,
-      pointBackgroundColor: "rgb(255, 99, 132)",
+      backgroundColor: newColorMap[song.spotify_id].backgroundColor, // Persistent background color
+      borderColor: newColorMap[song.spotify_id].borderColor, // Persistent line color
+      pointBackgroundColor: newColorMap[song.spotify_id].borderColor, // Persistent corners color
       pointBorderColor: "#fff",
       pointHoverBackgroundColor: "#fff",
-      pointHoverBorderColor: "rgb(255, 99, 132)",
+      pointHoverBorderColor: newColorMap[song.spotify_id].borderColor,
     }));
 
     setData(formattedData);
@@ -80,33 +99,43 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
   };
 
   return (
-    <div>
+    <div className="text-center">
       {data.length === 0 ? (
-        <p>No data available</p>
+        <p>Choose songs in "Song List"</p>
       ) : (
-        <Radar
-          data={chartData}
-          options={{
-            elements: {
-              line: {
-                borderWidth: 3, // Adjusts line thickness
-              },
-            },
-            scales: {
-              r: {
-                grid: {
-                  color: "rgba(145, 127, 127, 0.3)", // Grid lines color
-                },
-                angleLines: {
-                  color: "white", // Angle lines color
-                },
-                ticks: {
-                  color: "white", // Labels (numbers) color
+        <div className="w-[500px] h-[500px]"> {/* Enlarged Chart */}
+          <Radar
+            data={chartData}
+            options={{
+              elements: {
+                line: {
+                  borderWidth: 3, // Adjusts line thickness
                 },
               },
-            },
-          }}
-        />
+              scales: {
+                r: {
+                  grid: {
+                    color: "rgb(92, 92, 92)", // Grid lines color
+                  },
+                  angleLines: {
+                    color: "grey", // Angle lines color
+                  },
+                  ticks: {
+                    color: "white", // Labels (numbers) color
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    color: "white", // Legend text color
+                  },
+                },
+              },
+              
+            }}
+          />
+        </div>
       )}
     </div>
   );

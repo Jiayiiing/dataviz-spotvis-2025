@@ -194,8 +194,9 @@ export default function RankingsPage() {
 
         {/* Radar Chart */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
-          <h1 className="text-2xl font-semibold mb-2">Radar Chart</h1>
+          <h1 className="text-2xl font-semibold mb-2">Song Properties</h1>
           <Radartest  songsData={selectedSongs}/>
+          
         </div>
 
         {/* Song List */}
