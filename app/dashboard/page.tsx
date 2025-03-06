@@ -1,14 +1,14 @@
 "use client";
 import { Suspense } from "react";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import DatePicker from "@/components/DatePicker";
 import SongList from "@/components/SongList";
 import WordCloud from "@/components/WordCloud";
 import HeatmapChart from "@/components/heatmap";
 import Radartest from "@/components/radartest";
-//import RadarChart from "@/components/RadarChart"; // Ensure this component exists
-import { useSearchParams } from "next/navigation";
 import BackArrow from "@/components/backarrow";
+import TitleHeader from "@/components/titleHeader";
 
 // Type definitions
 type Song = { name: string; 
@@ -21,6 +21,7 @@ type Song = { name: string;
   liveness: number; 
   Song_artists: SongArtist[];
 };
+
 type Ranking = {
   spotify_id: string;
   daily_rank: number;
@@ -28,6 +29,7 @@ type Ranking = {
   snapshot_date: string;
   Songs: Song;
 };
+
 type Word = { text: string; value: number; id: number };
 type Artist = { id: number, name: string };
 type SongArtist = { Artists: Artist };
@@ -105,7 +107,7 @@ export default function RankingsPage() {
   const searchParams = useSearchParams();
   const countryId = searchParams.get("countryId");
 
-  const [startDate, setStartDate] = useState<string>("2023-10-18");
+  const [startDate, setStartDate] = useState<string>("2024-10-18");
   const [endDate, setEndDate] = useState<string>("");
   const [rankings, setRankings] = useState<Ranking[]>([]);
   const [selectedSongs, setSelectedSongs] = useState<Song[]>([]);
@@ -150,8 +152,7 @@ export default function RankingsPage() {
 
   return (
     <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
-      <h1 className="text-4xl font-bold mb-4">Spotivis</h1>
-
+      <TitleHeader />
       <div className="absolute top-4 left-4">
         <BackArrow />
       </div>

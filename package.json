@@ -17,6 +17,7 @@
     "chart.js": "^4.4.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "country-flag-emoji-polyfill": "^0.1.8",
     "d3": "^7.9.0",
     "d3-cloud": "^1.2.7",
     "date-fns": "^4.1.0",

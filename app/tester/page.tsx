@@ -3,8 +3,6 @@
  import { createClient } from '@/utils/supabase/client';
  import { useEffect, useState } from 'react';
 
- 
- 
  export default function Page() {
      const [data, setData] = useState<any[] | null>(null);
      const [country, setCountry] = useState('VN');

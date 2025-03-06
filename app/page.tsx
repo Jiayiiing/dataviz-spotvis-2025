@@ -11,6 +11,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [country, setCountry] = useState("");
 
   const router = useRouter();
 
@@ -52,8 +53,15 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    if (country) {
+      localStorage.setItem("country", country);
+    }
+  }, [country]);
+
   // Send id and country to next page.
-  const chooseCountry = (id: number, country_name: string) => {
+  const chooseCountry = (id: number, country_name: string, country: string) => {
+    setCountry(country);
     router.push(`/dashboard?country=${country_name}&countryId=${id}`);
   };
 
@@ -61,7 +69,7 @@ export default function Home() {
   const handleRandomCountry = () => {
     const randomCountry =
       countries[Math.floor(Math.random() * countries.length)];
-    chooseCountry(randomCountry.id, randomCountry.country_name);
+    chooseCountry(randomCountry.id, randomCountry.country_name, randomCountry.country);
   };
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -120,7 +128,7 @@ export default function Home() {
                 );
 
                 if (selectedCountry) {
-                  chooseCountry(selectedCountry.id, selectedCountry.country_name);
+                  chooseCountry(selectedCountry.id, selectedCountry.country_name, selectedCountry.country);
                 }
               }}
               className="border p-2 rounded w-full bg-green-700 text-white hover:bg-green-900"
