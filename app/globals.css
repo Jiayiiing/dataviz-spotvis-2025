@@ -70,14 +70,7 @@
   .click-only-text::selection {
     background: none;
   }
-  .word-default {
-    fill: rgb(29,185,84);
-    font-weight: normal;
-  }
-  .word-hovered {
-    fill: #80780c;
-    font-weight: bold;
-  }
+
   .word-selected {
     fill: rgb(255, 245, 159);
   }

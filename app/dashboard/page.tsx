@@ -175,14 +175,16 @@ export default function RankingsPage() {
       {/* 2x2 Grid Layout (Scrollable) */}
       <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-3xl mt-6 h-[75vh] overflow-auto">
         {/* WordCloud */}
-        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
+        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-center items-center overflow-auto">
+          <h1 className="text-2xl font-semibold">Most Popular Artists</h1>
           <WordCloud  
-          selectedArtists={selectedArtists}
-          setSelectedArtists={setSelectedArtists} 
-          data={artistsRankings} 
-          width={500} 
-          height={250} />
+            setSelectedArtists={setSelectedArtists} 
+            data={artistsRankings} 
+            width={850} 
+            height={300} 
+          />
         </div>
+
 
         {/* Heatmap */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-start overflow-auto">
@@ -191,7 +193,7 @@ export default function RankingsPage() {
 
         {/* Radar Chart */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
-          <h1 className="text-lg font-semibold mb-2">Radar Chart</h1>
+          <h1 className="text-2xl font-semibold mb-2">Radar Chart</h1>
           <Radartest  songsData={selectedSongs}/>
         </div>
 
