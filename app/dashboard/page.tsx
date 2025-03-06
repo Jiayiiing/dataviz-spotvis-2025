@@ -1,14 +1,14 @@
 "use client";
 import { Suspense } from "react";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import DatePicker from "@/components/DatePicker";
 import SongList from "@/components/SongList";
 import WordCloud from "@/components/WordCloud";
 import HeatmapChart from "@/components/heatmap";
 import Radartest from "@/components/radartest";
-//import RadarChart from "@/components/RadarChart"; // Ensure this component exists
-import { useSearchParams } from "next/navigation";
 import BackArrow from "@/components/backarrow";
+import TitleHeader from "@/components/titleHeader";
 
 // Type definitions
 type Song = { name: string; 
@@ -21,6 +21,7 @@ type Song = { name: string;
   liveness: number; 
   Song_artists: SongArtist[];
 };
+
 type Ranking = {
   spotify_id: string;
   daily_rank: number;
@@ -28,6 +29,7 @@ type Ranking = {
   snapshot_date: string;
   Songs: Song;
 };
+
 type Word = { text: string; value: number; id: number };
 type Artist = { id: number, name: string };
 type SongArtist = { Artists: Artist };
@@ -105,41 +107,18 @@ export default function RankingsPage() {
   const searchParams = useSearchParams();
   const countryId = searchParams.get("countryId");
 
-  const [startDate, setStartDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("2024-10-18");
   const [endDate, setEndDate] = useState<string>("");
   const [rankings, setRankings] = useState<Ranking[]>([]);
   const [selectedSongs, setSelectedSongs] = useState<Song[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [minDate, setMinDate] = useState<string>("");
-  const [maxDate, setMaxDate] = useState<string>("");
   const [dateRangeLoading, setDateRangeLoading] = useState<boolean>(true);
 
-  // Fetch available date range for the date picker
-  useEffect(() => {
-    const fetchDateRange = async () => {
-      try {
-        const response = await fetch("/api/rankings-dates");
-        const data = await response.json();
-        if (response.ok) {
-          setMinDate(data.minDate);
-          setMaxDate(data.maxDate);
-          setStartDate(data.minDate);
-          setEndDate(data.maxDate);
-        } else {
-          throw new Error(data.error || "Failed to fetch date range");
-        }
-      } catch (err: any) {
-        setError(err.message || "An unexpected error occurred");
-      } finally {
-        setDateRangeLoading(false);
-      }
-    };
+  const minDate = "2023-10-18";
+  const maxDate = "2025-02-17";
 
-    fetchDateRange();
-  }, []);
-  
   // Fetch rankings data
   const fetchRankings = async () => {
     if (!startDate || !endDate) return;
@@ -173,8 +152,7 @@ export default function RankingsPage() {
 
   return (
     <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
-      <h1 className="text-4xl font-bold mb-4">Spotivis</h1>
-
+      <TitleHeader />
       <div className="absolute top-4 left-4">
         <BackArrow />
       </div>
@@ -195,7 +173,7 @@ export default function RankingsPage() {
       {error && <p className="text-red-500 font-semibold">{error}</p>}
 
       {/* 2x2 Grid Layout (Scrollable) */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-lg mt-6 h-[70vh] overflow-auto">
+      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-3xl mt-6 h-[75vh] overflow-auto">
         {/* WordCloud */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-center overflow-auto">
           <WordCloud  
@@ -208,22 +186,11 @@ export default function RankingsPage() {
 
         {/* Heatmap */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex justify-center items-start overflow-auto">
-          <HeatmapChart data={heatmapData.reverse()} width={500} height={1000} selectedArtists={selectedArtists}/>
+            <HeatmapChart data={heatmapData.reverse()} width={500} height={1000} selectedArtists={selectedArtists}/>
         </div>
 
-        {/* Radar Chart with Selected Song IDs */}
+        {/* Radar Chart */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
-          {/* Selected Song IDs */}
-          <div className="mb-4 text-center border-b pb-2 w-full">
-            <p className="text-sm text-gray-600">
-              SongID 1: 003vvx7Niy0yvhvHt4a68B
-            </p>
-            <p className="text-sm text-gray-600">
-              SongID 2: 00R2eVdkti9OZboefW2f4i
-            </p>
-          </div>
-
-          {/* Radar Chart */}
           <h1 className="text-lg font-semibold mb-2">Radar Chart</h1>
           <Radartest  songsData={selectedSongs}/>
         </div>
@@ -238,18 +205,6 @@ export default function RankingsPage() {
           />
         </div>
       </div>
-      
-      {/* Selected Songs List (Debugging) 
-      {selectedSongs.length > 0 && (
-        <div className="mt-6 p-4 border rounded bg-gray-100">
-          <h2 className="text-lg font-semibold mb-2">Selected Songs:</h2>
-          <ul className="list-disc list-inside">
-            {selectedSongs.map((song, index) => (
-              <li key={index}>{song.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}*/}
     </div>
   );
 }
