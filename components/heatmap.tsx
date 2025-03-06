@@ -22,17 +22,18 @@ type HeatMapProps = {
 const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArtists }) => {
 
   const [highlightedArtists, setHighlightedArtists] = useState(selectedArtists);
+  //console.log("THE data", data)
 
   useEffect(() => {
     setHighlightedArtists(selectedArtists);
   }, [selectedArtists]);
 
-  const selectedNames = highlightedArtists.map(artist => artist.name);
+  const selectedNames = highlightedArtists.map(artist => artist.name.trim());
   console.log("HIGHLIGHTED ARTISTS", selectedNames)
 
   const reorderedData = [
-    ...data.filter(entry => !selectedNames.includes(entry.name)),
-    ...data.filter(entry => selectedNames.includes(entry.name)) 
+    ...data.filter(entry => !selectedNames.includes(entry.name.trim())),
+    ...data.filter(entry => selectedNames.includes(entry.name.trim())) 
   ];
   
 
@@ -56,7 +57,7 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
         offsetY: 0,
         style: {
           colors: selectedNames.length > 0
-            ? reorderedData.map(entry => selectedNames.includes(entry.name) ? "#1db954" : "#FFFFFF") // Red color for selected artists
+            ? reorderedData.map(entry => selectedNames.includes(entry.name.trim()) ? "#fff59f" : "#FFFFFF") // Red color for selected artists
             : "#FFFFFF",  // Default color
           fontSize: "11px",
           fontWeight: "bold",
@@ -88,7 +89,7 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
     },
     plotOptions: {
       heatmap: {
-        radius: 5,
+        radius: 2,
         shadeIntensity: 0.75,
         useFillColorAsStroke: false,
         distributed: false,

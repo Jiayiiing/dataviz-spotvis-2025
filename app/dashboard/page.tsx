@@ -83,11 +83,15 @@ const formatHeatmapData = (data: Ranking[]): Series[] => {
     .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   data.forEach((entry) => {
-    const artist_name = entry.Songs.Song_artists[0].Artists.name;
-    if (!artistMap.has(artist_name)) {
-      artistMap.set(artist_name, new Map());
-    }
-    artistMap.get(artist_name).set(entry.snapshot_date, entry.daily_rank);
+    entry.Songs.Song_artists.forEach((artistEntry: SongArtist) => {
+      const artist_name = artistEntry.Artists.name;
+
+      if (!artistMap.has(artist_name)) {
+        artistMap.set(artist_name, new Map());
+      }
+
+      artistMap.get(artist_name).set(entry.snapshot_date, entry.daily_rank);
+    });
   });
 
   const formatedData: Series[] = Array.from(artistMap, ([artist, rankMap]) => ({
@@ -189,7 +193,7 @@ export default function RankingsPage() {
         {/* Heatmap */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col items-center overflow-auto">
             <h1 className="text-2xl font-semibold">Popularity Over Time</h1>
-            <HeatmapChart data={heatmapData.reverse()} width={650} height={1000} selectedArtists={selectedArtists}/>
+            <HeatmapChart data={heatmapData.reverse()} width={650} height={1600} selectedArtists={selectedArtists}/>
         </div>
 
         {/* Radar Chart */}
