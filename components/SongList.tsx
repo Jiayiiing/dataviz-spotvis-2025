@@ -39,10 +39,19 @@ export default function SongList({
   selectedArtists,
   onSelectionChange,
 }: SongListProps) {
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const uniqueDates = Array.from(new Set(rankings.map((ranking) => ranking.snapshot_date))).sort();
-  const [albumCovers, setAlbumCovers] = useState<Record<string, string | null>>({});
 
+  const [albumCovers, setAlbumCovers] = useState<Record<string, string | null>>({});
+  const uniqueDates = Array.from(new Set(rankings.map((ranking) => ranking.snapshot_date))).sort();
+  const [selectedDate, setSelectedDate] = useState<string>(""); // Start as empty
+  const [hasUserInteracted, setHasUserInteracted] = useState<boolean>(false); // Tracks slider interaction
+
+
+  // Ensure selectedDate is set to uniqueDates[0] in the beginning.
+  useEffect(() => {
+    if (uniqueDates.length > 0 && !selectedDate) {
+      setSelectedDate(uniqueDates[0]);
+    }
+  }, [uniqueDates, selectedDate]); // Runs when uniqueDates or selectedDate changes
 
   /*
   useEffect(() => {
@@ -79,8 +88,11 @@ export default function SongList({
     const selectedIndex = parseInt(e.target.value, 10);
     const actualDate = uniqueDates[selectedIndex]; // Get the actual date using the index
     setSelectedDate(actualDate); 
+    setHasUserInteracted(true);
     console.log(actualDate);
   };
+
+  const effectiveDate = hasUserInteracted ? selectedDate : uniqueDates[0];
 
   return (
     <div>
@@ -89,7 +101,7 @@ export default function SongList({
       {/* Date Selector */}
       <div className="mb-4">
         <label className="mr-2">Selected Date:</label>
-        <span className="text-lg font-semibold text-blue-500">{selectedDate || "Select a date"}</span>
+        <span className="text-lg font-semibold text-blue-500">{selectedDate}</span>
         <input
           type="range"
           min={0}
@@ -111,7 +123,7 @@ export default function SongList({
           const seenSongs = new Set(); // Store unique song IDs
 
           return rankings
-            .filter((ranking) => !selectedDate || ranking.snapshot_date === selectedDate)
+            .filter((ranking) => ranking.snapshot_date === effectiveDate)
             .filter((ranking) => {
               if (seenSongs.has(ranking.spotify_id)) return false; // Skip duplicates
               seenSongs.add(ranking.spotify_id); // Mark as seen
