@@ -22,6 +22,7 @@ type HeatMapProps = {
 const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArtists }) => {
 
   const [highlightedArtists, setHighlightedArtists] = useState(selectedArtists);
+  
   //console.log("THE data", data)
 
   useEffect(() => {
@@ -87,10 +88,23 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
     legend: {
       position: "right",
     },
+    /*
+    annotations: {
+      yaxis: reorderedData
+        .filter(entry => selectedNames.includes(entry.name)) // Find where selected names exist
+        .map(entry => ({
+          y: entry.name,       // Place annotation at this y-value
+          borderColor: "#fff59f",  // Border color (change if needed)
+          borderWidth: 20,
+          strokeDashArray: 0,
+          opacity: 1,
+        })),
+    },
+    */
     plotOptions: {
       heatmap: {
         radius: 2,
-        shadeIntensity: 0.75,
+        shadeIntensity: 0.4,
         useFillColorAsStroke: false,
         distributed: false,
         colorScale: {
@@ -98,11 +112,9 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
           min: 1,
           max: 50,
           ranges: [
-            { from: 1, to: 10, color: "#1DB954" },  // Spotify green (top)
-            { from: 11, to: 20, color: "#6FCC9B" }, // Light green
-            { from: 21, to: 30, color: "#FFB300" }, // Yellow (middle)
-            { from: 31, to: 40, color: "#FFA726" }, // Orange
-            { from: 41, to: 50, color: "#FF0000" }, // Red (bottom)
+            { from: 1, to: 15, color: "#1DB954" },  // Green for top-ranked
+            { from: 16, to: 35, color: "#FFB300" }, // Yellow/Orange for mid-ranked
+            { from: 36, to: 50, color: "#FF0000" }, // Red for lower ranks
             { from: 0, to: 0, color: "#000000", name: "Outside top 50"},
           ],
         },

@@ -77,34 +77,45 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
 
 const formatHeatmapData = (data: Ranking[]): Series[] => {
   const artistMap = new Map();
-  //const allDates = new Set(data.map((entry) => entry.snapshot_date));
 
+  // Collect all unique dates and sort them
   const allDates = Array.from(new Set(data.map(({ snapshot_date }) => snapshot_date)))
     .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+  //console.log("All dates", allDates);
 
   data.forEach((entry) => {
     entry.Songs.Song_artists.forEach((artistEntry: SongArtist) => {
       const artist_name = artistEntry.Artists.name;
+      const currentRank = entry.daily_rank;
+      const snapshotDate = entry.snapshot_date;
 
       if (!artistMap.has(artist_name)) {
         artistMap.set(artist_name, new Map());
       }
 
-      artistMap.get(artist_name).set(entry.snapshot_date, entry.daily_rank);
+      const rankMap = artistMap.get(artist_name);
+      const existingRank = rankMap.get(snapshotDate) ?? 51;
+
+      // Update only if the new rank is better (lower)
+      if (currentRank < existingRank) {
+        rankMap.set(snapshotDate, currentRank);
+      }
     });
   });
 
-  const formatedData: Series[] = Array.from(artistMap, ([artist, rankMap]) => ({
-      name: artist,
-      data: Array.from(allDates, (date) => ({
-          x: date,
-          y: rankMap.get(date) ?? null,
-      })),
+  // Convert artistMap into the final series format
+  const formattedData: Series[] = Array.from(artistMap, ([artist, rankMap]) => ({
+    name: artist,
+    data: allDates.map((date) => ({
+      x: date,
+      y: rankMap.get(date) ?? null, // Use the best rank found or null if no data
+    })),
   }));
 
-  console.log("Formatted Heatmap Data:", formatedData);
-  return formatedData;
-} 
+  return formattedData;
+};
+
 
 export default function RankingsPage() {
 
