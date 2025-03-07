@@ -24,7 +24,7 @@ export default function DatePicker({
   dateRangeLoading,
   fetchRankings,
 }: DatePickerProps) {
-  const [rangeType, setRangeType] = useState<"Week" | "Month" | "3 Months">(
+  const [rangeType, setRangeType] = useState<"Week" | "Month" >(
     "Week"
   );
 
@@ -38,9 +38,6 @@ export default function DatePicker({
         break; 
       case "Month":
         newEndDate = format(addMonths(new Date(newStartDate), 1), "yyyy-MM-dd");
-        break;
-      case "3 Months":
-        newEndDate = format(addMonths(new Date(newStartDate), 3), "yyyy-MM-dd");
         break;
       default:
         newEndDate = newStartDate;
@@ -77,13 +74,12 @@ export default function DatePicker({
       <select
         value={rangeType}
         onChange={(e) =>
-          setRangeType(e.target.value as "Week" | "Month" | "3 Months")
+          setRangeType(e.target.value as "Week" | "Month")
         }
         className="border p-2 rounded text-white"
       >
         <option value="Week">Week</option>
         <option value="Month">Month</option>
-        <option value="3 Months">3 Months</option>
       </select>
     </div>
   );

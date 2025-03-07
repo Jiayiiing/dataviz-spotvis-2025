@@ -103,8 +103,8 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
     */
     plotOptions: {
       heatmap: {
-        radius: 2,
-        shadeIntensity: 0.4,
+        radius: 4,
+        shadeIntensity: 0.7,
         useFillColorAsStroke: false,
         distributed: false,
         colorScale: {
@@ -113,7 +113,8 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
           max: 50,
           ranges: [
             //{ from: 1, to: 50, color: "#1DB954" },  // Green for top-ranked
-            { from: 1, to: 15, color: "#1DB954" },  // Green for top-ranked
+            { from: 1, to: 1, color: "#00FFFF", name: "Top of the charts" },
+            { from: 2, to: 15, color: "#1DB954" },  // Green for top-ranked
             { from: 16, to: 35, color: "#FFB300" }, // Yellow/Orange for mid-ranked
             { from: 36, to: 50, color: "#FF0000" }, // Red for lower ranks
             { from: 0, to: 0, color: "#000000", name: "Outside top 50"},
