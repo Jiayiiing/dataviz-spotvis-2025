@@ -103,7 +103,7 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
     */
     plotOptions: {
       heatmap: {
-        radius: 4,
+        radius: 2.5,
         shadeIntensity: 0.7,
         useFillColorAsStroke: false,
         distributed: false,
