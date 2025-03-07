@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import DatePicker from "@/components/DatePicker";
 import SongList from "@/components/SongList";
@@ -8,7 +8,7 @@ import HeatmapChart from "@/components/heatmap";
 import Radartest from "@/components/radartest";
 import BackArrow from "@/components/backarrow";
 import TitleHeader from "@/components/titleHeader";
-import Radarchart_explain from "@/components/radarchart-explain"
+import Radarchart_explain from "@/components/radarchart-explain";
 
 // Type definitions
 type Song = {
@@ -19,7 +19,7 @@ type Song = {
   valence: number;
   acousticness: number;
   popularity: number;
-  liveness: number; 
+  liveness: number;
   Song_artists: SongArtist[];
 };
 
@@ -126,6 +126,7 @@ export default function RankingsPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [dateRangeLoading, setDateRangeLoading] = useState<boolean>(true);
+  const [expandedCell, setExpandedCell] = useState<number | null>(null);
 
   const minDate = "2023-10-18";
   const maxDate = "2025-02-17";
@@ -161,7 +162,7 @@ export default function RankingsPage() {
   // Data for the heatmap
   const heatmapData = formatHeatmapData(rankings);
 
-  //consts for setting radarchart pop up information 
+  //consts for setting radarchart pop up information
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const openPopup = () => {
     setIsPopupOpen(true);
@@ -170,37 +171,59 @@ export default function RankingsPage() {
     setIsPopupOpen(false);
   };
 
+  const toggleExpand = (index: number) => {
+    setExpandedCell(expandedCell === index ? null : index);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setExpandedCell(null); // Reset expanded cell
+      }
+    };
+  
+    document.addEventListener("keydown", handleKeyDown);
+  
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
-      <div className="flex items-center justify-center w-full relative">
-        <TitleHeader />
-        <div className="absolute right-0">
-          <DatePicker
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            minDate={minDate}
-            maxDate={maxDate}
-            dateRangeLoading={dateRangeLoading}
-            fetchRankings={fetchRankings}
-          />
-        </div>
-      </div>
-
-      {/* Back Arrow */}
+      <TitleHeader />
       <div className="absolute top-4 left-4">
         <BackArrow />
       </div>
-
+      {/* Date Picker */}
+      <DatePicker
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        minDate={minDate}
+        maxDate={maxDate}
+        dateRangeLoading={dateRangeLoading}
+        fetchRankings={fetchRankings}
+      />
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500 font-semibold">{error}</p>}
 
-      {/* 2x2 Grid Layout (Scrollable) */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-3xl mt-6 h-[75vh] overflow-auto">
+      {expandedCell !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 z-40"></div>
+      )}
+
+      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-3xl mt-6 h-[75vh] overflow-hidden">
         {/* WordCloud */}
-        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-center items-center overflow-auto">
+        <div
+          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-center items-center overflow-auto 
+      transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c] ${
+        expandedCell === 1
+          ? "col-span-2 row-span-2 w-full h-full fixed top-0 left-0 z-50 scale-150"
+          : ""
+      }`}
+          onClick={() => toggleExpand(1)}
+        >
           <h1 className="text-2xl font-semibold">Most Popular Artists</h1>
           <WordCloud
             setSelectedArtists={setSelectedArtists}
@@ -211,7 +234,15 @@ export default function RankingsPage() {
         </div>
 
         {/* Heatmap */}
-        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col items-center overflow-auto">
+        <div
+          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col items-center overflow-auto 
+      transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c] ${
+        expandedCell === 2
+          ? "col-span-2 row-span-2 w-full h-full fixed top-0 left-0 z-50 scale-100"
+          : ""
+      }`}
+          onClick={() => toggleExpand(2)}
+        >
           <h1 className="text-2xl font-semibold">Popularity Over Time</h1>
           <HeatmapChart
             data={heatmapData.reverse()}
@@ -222,15 +253,24 @@ export default function RankingsPage() {
         </div>
 
         {/* Radar Chart */}
-        <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
+        <div
+          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center 
+      transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c] ${
+        expandedCell === 3
+          ? "col-span-2 row-span-2 w-full h-full fixed top-0 justify-center items-center left-0 z-50 scale-150"
+          : ""
+      }`}
+          onClick={() => toggleExpand(3)}
+        >
           <h1 className="text-2xl font-semibold mb-2">Song Properties</h1>
           <Radarchart_explain isOpen={isPopupOpen} onClose={closePopup} />
-
           <div className="relative flex justify-center items-center w-full">
-
-            <button 
+            <button
               className="absolute top-2 left-2 flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full font-bold hover:bg-green-900"
-              onClick={openPopup}
+              onClick={(event) => {
+                event.stopPropagation();
+                openPopup();}
+                }
             >
               ?
             </button>
@@ -239,7 +279,10 @@ export default function RankingsPage() {
         </div>
 
         {/* Song List */}
-        <div className="p-4 border rounded bg-[var(--grid-bg-color)] overflow-auto">
+        <div
+          className={`p-4 border rounded bg-[var(--grid-bg-color)] overflow-auto 
+      transition-all duration-300 ease-in-out `}
+        >
           <SongList
             rankings={rankings}
             selectedArtists={selectedArtists}

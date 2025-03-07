@@ -109,6 +109,7 @@ export default function SongList({
           value={uniqueDates.indexOf(selectedDate)}
           onChange={handleSliderChange}
           className="w-full"
+          onClick={(e) => e.stopPropagation()} 
         />
          <div className="flex justify-between">
           <span>{uniqueDates[0]}</span>
@@ -159,7 +160,9 @@ export default function SongList({
                   <div className="text-sm text-gray-500">Rank: {ranking.daily_rank}</div>
                 </div>
                 <button
-                  onClick={() => handlePlusButtonClick(ranking.Songs)}
+                  onClick={(event) => {
+                    event.stopPropagation(); 
+                    handlePlusButtonClick(ranking.Songs);}}
                   className={`p-2 rounded ${selectedSongs.some((s) => s.spotify_id === ranking.Songs.spotify_id) ? "bg-green-500 text-white" : "bg-gray-300 text-black"}`}
                 >
                   +
