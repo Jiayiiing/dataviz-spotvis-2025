@@ -29,7 +29,7 @@ const TitleHeader = () => {
     <>
       Spotivis - {countryName}{" "}
       <span style={{ fontFamily: "Twemoji Country Flags" }}>
-        {getFlagEmoji(countryId)}
+        {countryName !== "Global" && getFlagEmoji(countryId)}
       </span>
     </>
   );
