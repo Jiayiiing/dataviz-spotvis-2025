@@ -81,7 +81,7 @@ const formatHeatmapData = (data: Ranking[]): Series[] => {
 
   data.forEach((entry) => {
     entry.Songs.Song_artists.forEach((artistEntry: SongArtist) => {
-      const artist_name = artistEntry.Artists.name;
+      const artist_name = artistEntry.Artists.name.trim();
       const currentRank = entry.daily_rank;
       const snapshotDate = entry.snapshot_date;
 

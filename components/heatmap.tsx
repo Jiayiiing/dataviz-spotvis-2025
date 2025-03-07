@@ -22,7 +22,7 @@ type HeatMapProps = {
 const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArtists }) => {
 
   const [highlightedArtists, setHighlightedArtists] = useState(selectedArtists);
-  
+
   //console.log("THE data", data)
 
   useEffect(() => {
@@ -112,6 +112,7 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
           min: 1,
           max: 50,
           ranges: [
+            //{ from: 1, to: 50, color: "#1DB954" },  // Green for top-ranked
             { from: 1, to: 15, color: "#1DB954" },  // Green for top-ranked
             { from: 16, to: 35, color: "#FFB300" }, // Yellow/Orange for mid-ranked
             { from: 36, to: 50, color: "#FF0000" }, // Red for lower ranks
