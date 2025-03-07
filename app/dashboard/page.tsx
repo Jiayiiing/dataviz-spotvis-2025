@@ -232,7 +232,6 @@ export default function RankingsPage() {
             </button>
             <Radartest songsData={selectedSongs} />
           </div>
-          <Radartest songsData={selectedSongs} />
         </div>
 
         {/* Song List */}
