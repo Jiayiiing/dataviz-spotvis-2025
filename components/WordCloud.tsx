@@ -7,13 +7,12 @@ import cloud from "d3-cloud";
 type Word = {
   text: string;
   value: number;
-  id: number;
   x?: number;
   y?: number;
   rotate?: number;
 };
 
-type Artist = { id: number, name: string };
+type Artist = { name: string };
 
 type WordCloudProps = {
   data: Word[];
@@ -41,7 +40,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ setSelectedArtists, data, width =
     }
 
     setSelectedArtists((prevSelected) =>
-      isSelected ? prevSelected.filter((a) => a.name !== wordKey) : [...prevSelected, { id: d.id, name: wordKey }]
+      isSelected ? prevSelected.filter((a) => a.name !== wordKey) : [...prevSelected, { name: wordKey }]
     );
   }, [setSelectedArtists]);
 

@@ -1,6 +1,5 @@
 "use client";
-import { Suspense } from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DatePicker from "@/components/DatePicker";
 import SongList from "@/components/SongList";
@@ -12,8 +11,9 @@ import TitleHeader from "@/components/titleHeader";
 import Radarchart_explain from "@/components/radarchart-explain"
 
 // Type definitions
-type Song = { name: string; 
-  spotify_id: string; 
+type Song = {
+  name: string;
+  spotify_id: string;
   energy: number;
   danceability: number;
   valence: number;
@@ -31,18 +31,17 @@ type Ranking = {
   Songs: Song;
 };
 
-type Word = { text: string; value: number; id: number };
-type Artist = { id: number, name: string };
+type Word = { text: string; value: number };
+type Artist = { name: string };
 type SongArtist = { Artists: Artist };
 type SongsContainer = { [key: string]: SongArtist[] | unknown };
 type DataEntry = { daily_rank: number; Songs: SongsContainer };
-type SeriesEntry = {x: string, y: number};
-type Series = {name: string, data: SeriesEntry[]}
+type SeriesEntry = { x: string; y: number };
+type Series = { name: string; data: SeriesEntry[] };
 
 // Calculate artist popularity for WordCloud
-const calculateArtistPopularity = (data: DataEntry[]): Word[] => {  
-  //const artistScores: Record<string, number> = {};
-  const artistScores = new Map<number, { name: string; score: number }>();
+const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
+  const artistScores = new Map<string, number>(); // Map keyed by artist name
 
   data.forEach((entry) => {
     const points = 51 - entry.daily_rank;
@@ -52,27 +51,21 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
 
     if (!artistArray) return;
 
+    const processedArtists = new Set<string>(); // Track processed artist names for this entry
+
     artistArray.forEach((artistEntry: SongArtist) => {
-      // Old version:
-      //const artistName = artistEntry.Artists.name;
-      //artistScores[artistName] = (artistScores[artistName] || 0) + points;
+      const name = artistEntry.Artists.name.trim(); // Sanitize name
 
-      const { id, name } = artistEntry.Artists; // Extract artist ID & name
+      if (processedArtists.has(name)) return; // Skip duplicate artist in this entry
+      processedArtists.add(name);
 
-      // If the artist is not in the map, initialize them with a score of 0
-      if (!artistScores.has(id)) {
-        artistScores.set(id, { name, score: 0 });
-      }
-
-      // Increment the artist's score
-      artistScores.get(id)!.score += points;
+      artistScores.set(name, (artistScores.get(name) || 0) + points);
     });
   });
 
-  return Array.from(artistScores, ([id, { name, score }]) => ({
-    id, 
-    text: name, 
-    value: score, 
+  return Array.from(artistScores, ([name, score]) => ({
+    text: name,
+    value: score,
   }));
 };
 
@@ -80,8 +73,9 @@ const formatHeatmapData = (data: Ranking[]): Series[] => {
   const artistMap = new Map();
 
   // Collect all unique dates and sort them
-  const allDates = Array.from(new Set(data.map(({ snapshot_date }) => snapshot_date)))
-    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  const allDates = Array.from(
+    new Set(data.map(({ snapshot_date }) => snapshot_date))
+  ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   //console.log("All dates", allDates);
 
@@ -106,20 +100,21 @@ const formatHeatmapData = (data: Ranking[]): Series[] => {
   });
 
   // Convert artistMap into the final series format
-  const formattedData: Series[] = Array.from(artistMap, ([artist, rankMap]) => ({
-    name: artist,
-    data: allDates.map((date) => ({
-      x: date,
-      y: rankMap.get(date) ?? null, // Use the best rank found or null if no data
-    })),
-  }));
+  const formattedData: Series[] = Array.from(
+    artistMap,
+    ([artist, rankMap]) => ({
+      name: artist,
+      data: allDates.map((date) => ({
+        x: date,
+        y: rankMap.get(date) ?? null, // Use the best rank found or null if no data
+      })),
+    })
+  );
 
   return formattedData;
 };
 
-
 export default function RankingsPage() {
-
   const searchParams = useSearchParams();
   const countryId = searchParams.get("countryId");
 
@@ -150,7 +145,7 @@ export default function RankingsPage() {
         throw new Error(data.error || "Failed to fetch rankings");
 
       setRankings(data);
-      console.log("Data fetched")
+      console.log("Data fetched");
       //console.log(data);
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
@@ -182,7 +177,7 @@ export default function RankingsPage() {
       <div className="absolute top-4 left-4">
         <BackArrow />
       </div>
-      
+
       {/* Date Picker */}
       <DatePicker
         startDate={startDate}
@@ -203,19 +198,23 @@ export default function RankingsPage() {
         {/* WordCloud */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-center items-center overflow-auto">
           <h1 className="text-2xl font-semibold">Most Popular Artists</h1>
-          <WordCloud  
-            setSelectedArtists={setSelectedArtists} 
-            data={artistsRankings} 
-            width={850} 
-            height={300} 
+          <WordCloud
+            setSelectedArtists={setSelectedArtists}
+            data={artistsRankings}
+            width={850}
+            height={300}
           />
         </div>
 
-
         {/* Heatmap */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col items-center overflow-auto">
-            <h1 className="text-2xl font-semibold">Popularity Over Time</h1>
-            <HeatmapChart data={heatmapData.reverse()} width={650} height={1600} selectedArtists={selectedArtists}/>
+          <h1 className="text-2xl font-semibold">Popularity Over Time</h1>
+          <HeatmapChart
+            data={heatmapData.reverse()}
+            width={650}
+            height={1600}
+            selectedArtists={selectedArtists}
+          />
         </div>
 
         {/* Radar Chart */}
@@ -233,6 +232,7 @@ export default function RankingsPage() {
             </button>
             <Radartest songsData={selectedSongs} />
           </div>
+          <Radartest songsData={selectedSongs} />
         </div>
 
         {/* Song List */}

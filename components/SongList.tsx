@@ -15,7 +15,7 @@ type Song = {
   liveness: number; 
   Song_artists: SongArtist[];};
 
-type Artist = { id: number, name: string };
+type Artist = { name: string };
 type SongArtist = { Artists: Artist };
 
 type Ranking = {
@@ -121,7 +121,7 @@ export default function SongList({
               // Filter songs based on selected artists
               if (selectedArtists.length === 0) return true; // If no artists are selected, show all songs
               return ranking.Songs.Song_artists.some((songArtist) =>
-                selectedArtists.some((artist) => artist.id === songArtist.Artists.id)
+                selectedArtists.some((artist) => artist.name.trim() === songArtist.Artists.name.trim())
               );
             })
             .map((ranking) => (
