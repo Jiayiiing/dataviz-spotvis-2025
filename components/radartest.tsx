@@ -109,11 +109,11 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
   return (
     <div className="text-center">
       {data.length === 0 ? (
-        <p>Choose songs in "Song List"</p>
+        <p>Choose songs in Song List</p>
 
 
       ) : (
-        <div className="w-[500px] h-[500px]"> {/* Enlarged Chart */}
+        <div className="w-[430px] h-[430px]"> {/* Enlarged Chart */}
           <Radar
             data={chartData}
             options={{

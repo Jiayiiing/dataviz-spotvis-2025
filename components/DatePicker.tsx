@@ -64,7 +64,7 @@ export default function DatePicker({
       <input
         type="date"
         value={startDate}
-        min={startDate || minDate}
+        min={minDate}
         max={maxDate}
         onChange={(e) => setStartDate(e.target.value)}
         className="border p-2 rounded text-white"

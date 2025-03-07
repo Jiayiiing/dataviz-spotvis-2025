@@ -173,22 +173,26 @@ export default function RankingsPage() {
 
   return (
     <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
-      <TitleHeader />
+      <div className="flex items-center justify-center w-full relative">
+        <TitleHeader />
+        <div className="absolute right-0">
+          <DatePicker
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            minDate={minDate}
+            maxDate={maxDate}
+            dateRangeLoading={dateRangeLoading}
+            fetchRankings={fetchRankings}
+          />
+        </div>
+      </div>
+
+      {/* Back Arrow */}
       <div className="absolute top-4 left-4">
         <BackArrow />
       </div>
-
-      {/* Date Picker */}
-      <DatePicker
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
-        minDate={minDate}
-        maxDate={maxDate}
-        dateRangeLoading={dateRangeLoading}
-        fetchRankings={fetchRankings}
-      />
 
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500 font-semibold">{error}</p>}
