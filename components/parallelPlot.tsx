@@ -10,7 +10,7 @@ type Song = {
   danceability: number;
   valence: number;
   acousticness: number;
-  instrumentalness: number;
+  popularity: number;
   liveness: number;
   [key: string]: any;
 };
@@ -26,7 +26,7 @@ const attributes = [
   "danceability",
   "valence",
   "acousticness",
-  "instrumentalness",
+  "popularity",
   "liveness",
 ];
 
@@ -81,6 +81,11 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
       y[attr] = d3.scaleLinear().domain([0, 1]).range([innerHeight, 0]);
     });
 
+    const adjustedData = data.map((song) => ({
+      ...song,
+      popularity: song.popularity / 100, 
+    }));
+
     // Draw axes
     g.selectAll(".axis")
       .data(attributes)
@@ -94,7 +99,7 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
 
     // Draw lines
     g.selectAll(".line")
-      .data(data)
+    .data(adjustedData)
       .enter()
       .append("path")
       .attr("class", "line")

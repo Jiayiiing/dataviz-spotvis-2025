@@ -9,6 +9,7 @@ import HeatmapChart from "@/components/heatmap";
 import Radartest from "@/components/radartest";
 import BackArrow from "@/components/backarrow";
 import TitleHeader from "@/components/titleHeader";
+import Radarchart_explain from "@/components/radarchart-explain"
 
 // Type definitions
 type Song = { name: string; 
@@ -17,7 +18,7 @@ type Song = { name: string;
   danceability: number;
   valence: number;
   acousticness: number;
-  instrumentalness: number;
+  popularity: number;
   liveness: number; 
   Song_artists: SongArtist[];
 };
@@ -165,6 +166,16 @@ export default function RankingsPage() {
   // Data for the heatmap
   const heatmapData = formatHeatmapData(rankings);
 
+  //consts for setting radarchart pop up information 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+
   return (
     <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
       <TitleHeader />
@@ -210,8 +221,18 @@ export default function RankingsPage() {
         {/* Radar Chart */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
           <h1 className="text-2xl font-semibold mb-2">Song Properties</h1>
-          <Radartest  songsData={selectedSongs}/>
-          
+          <Radarchart_explain isOpen={isPopupOpen} onClose={closePopup} />
+
+          <div className="relative flex justify-center items-center w-full">
+
+            <button 
+              className="absolute top-2 left-2 flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full font-bold hover:bg-green-900"
+              onClick={openPopup}
+            >
+              ?
+            </button>
+            <Radartest songsData={selectedSongs} />
+          </div>
         </div>
 
         {/* Song List */}

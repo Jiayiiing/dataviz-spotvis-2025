@@ -12,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import ParallelPlot from "./parallelPlot";
+import Radarchart_explain from "@/components/radarchart-explain"
 
 // Register necessary chart components
 ChartJS.register(
@@ -72,7 +73,7 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
         song.danceability,
         song.valence,
         song.acousticness,
-        song.instrumentalness,
+        song.popularity / 100,
         song.liveness,
       ],
       fill: true,
@@ -97,16 +98,20 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
       "Danceability",
       "Valence",
       "Acousticness",
-      "Instrumentalness",
+      "Popularity",
       "Liveness",
     ],
     datasets: data,
   };
 
+
+
   return (
     <div className="text-center">
       {data.length === 0 ? (
         <p>Choose songs in "Song List"</p>
+
+
       ) : (
         <div className="w-[500px] h-[500px]"> {/* Enlarged Chart */}
           <Radar
