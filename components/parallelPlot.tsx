@@ -30,20 +30,6 @@ const attributes = [
   "liveness",
 ];
 
-const generateDistinctColors = (numColors: number) => {
-  const baseColors = [
-    ...d3.schemeCategory10,  // 10 distinct colors
-    ...d3.schemeSet3,        // 12 additional distinct colors
-    ...d3.schemePaired,      // 12 more distinct colors
-    ...d3.schemeTableau10,   // 10 more distinct colors
-  ];
-
-  // Shuffle colors to ensure similar colors are spaced apart
-  const shuffledColors = [...baseColors].sort(() => Math.random() - 0.5);
-
-  return shuffledColors.slice(0, numColors);
-};
-
 const ParallelPlot: React.FC<ParallelPlotProps> = ({
   songsData,
   width = 500,
@@ -51,19 +37,27 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
 }) => {
   const [highlightedSong, setHighlightedSong] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
-
-  // Generate a color scale with highly distinct colors
-  const [colorScale] = useState(() => {
-    const colors = generateDistinctColors(50); // Get 50 visually distinct colors
-    return d3.scaleOrdinal<number, string>().domain([...Array.from(Array(50).keys())]).range(colors);
-  });
-  
+  const [colorMap, setColorMap] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
-    drawParallelPlot(songsData, colorScale);
-  }, [songsData, highlightedSong, width, height]);
+    const newColorMap = new Map(colorMap); // Preserve existing color map
+    songsData.forEach((song) => {
+      if (!newColorMap.has(song.spotify_id)) {
+        // Generate a new color if it hasn't been assigned already
+        const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+          Math.random() * 255
+        )}, ${Math.floor(Math.random() * 255)})`;
+        newColorMap.set(song.spotify_id, newColor);
+      }
+    });
+    setColorMap(newColorMap);
+  }, [songsData]);
 
-  const drawParallelPlot = (data: Song[], colorScale: d3.ScaleOrdinal<number, string>) => {
+  useEffect(() => {
+    drawParallelPlot(songsData, colorMap);
+  }, [songsData, highlightedSong, width, height, colorMap]);
+
+  const drawParallelPlot = (data: Song[], colorMap: Map<string, string>) => {
     const margin = { top: 30, right: 20, bottom: 50, left: 40 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -113,7 +107,7 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
             )
       )
       .style("fill", "none")
-      .style("stroke", (d, i) => colorScale(i % 50)) // Ensures color mapping within 50 colors
+      .style("stroke", (d) => colorMap.get(d.spotify_id) ?? "gray") // Use the persistent color from the colorMap
       .style(
         "stroke-width",
         (d, i) => (highlightedSong !== null && highlightedSong === i ? 3 : 1)
@@ -133,7 +127,7 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
   };
 
   const handleLegendClick = (index: number) => {
-    setHighlightedSong((prev) => (prev === index ? null : index)); // Toggle selection
+    setHighlightedSong((prev) => (prev === index ? null : index)); 
   };
 
   return (
@@ -159,7 +153,7 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
               style={{
                 width: "12px",
                 height: "12px",
-                backgroundColor: colorScale(index % 50), // Uses more distinguishable colors
+                backgroundColor: colorMap.get(song.spotify_id), 
                 marginRight: "5px",
               }}
             ></div>
