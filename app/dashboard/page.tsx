@@ -1,6 +1,5 @@
 "use client";
-import { Suspense } from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DatePicker from "@/components/DatePicker";
 import SongList from "@/components/SongList";
@@ -11,14 +10,15 @@ import BackArrow from "@/components/backarrow";
 import TitleHeader from "@/components/titleHeader";
 
 // Type definitions
-type Song = { name: string; 
-  spotify_id: string; 
+type Song = {
+  name: string;
+  spotify_id: string;
   energy: number;
   danceability: number;
   valence: number;
   acousticness: number;
   instrumentalness: number;
-  liveness: number; 
+  liveness: number;
   Song_artists: SongArtist[];
 };
 
@@ -30,16 +30,16 @@ type Ranking = {
   Songs: Song;
 };
 
-type Word = { text: string; value: number;};
+type Word = { text: string; value: number };
 type Artist = { name: string };
 type SongArtist = { Artists: Artist };
 type SongsContainer = { [key: string]: SongArtist[] | unknown };
 type DataEntry = { daily_rank: number; Songs: SongsContainer };
-type SeriesEntry = {x: string, y: number};
-type Series = {name: string, data: SeriesEntry[]}
+type SeriesEntry = { x: string; y: number };
+type Series = { name: string; data: SeriesEntry[] };
 
 // Calculate artist popularity for WordCloud
-const calculateArtistPopularity = (data: DataEntry[]): Word[] => {  
+const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
   const artistScores = new Map<string, number>(); // Map keyed by artist name
 
   data.forEach((entry) => {
@@ -63,20 +63,18 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
   });
 
   return Array.from(artistScores, ([name, score]) => ({
-    text: name, 
-    value: score, 
+    text: name,
+    value: score,
   }));
 };
-
-
-
 
 const formatHeatmapData = (data: Ranking[]): Series[] => {
   const artistMap = new Map();
 
   // Collect all unique dates and sort them
-  const allDates = Array.from(new Set(data.map(({ snapshot_date }) => snapshot_date)))
-    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  const allDates = Array.from(
+    new Set(data.map(({ snapshot_date }) => snapshot_date))
+  ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   //console.log("All dates", allDates);
 
@@ -101,20 +99,21 @@ const formatHeatmapData = (data: Ranking[]): Series[] => {
   });
 
   // Convert artistMap into the final series format
-  const formattedData: Series[] = Array.from(artistMap, ([artist, rankMap]) => ({
-    name: artist,
-    data: allDates.map((date) => ({
-      x: date,
-      y: rankMap.get(date) ?? null, // Use the best rank found or null if no data
-    })),
-  }));
+  const formattedData: Series[] = Array.from(
+    artistMap,
+    ([artist, rankMap]) => ({
+      name: artist,
+      data: allDates.map((date) => ({
+        x: date,
+        y: rankMap.get(date) ?? null, // Use the best rank found or null if no data
+      })),
+    })
+  );
 
   return formattedData;
 };
 
-
 export default function RankingsPage() {
-
   const searchParams = useSearchParams();
   const countryId = searchParams.get("countryId");
 
@@ -145,7 +144,7 @@ export default function RankingsPage() {
         throw new Error(data.error || "Failed to fetch rankings");
 
       setRankings(data);
-      console.log("Data fetched")
+      console.log("Data fetched");
       //console.log(data);
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
@@ -167,7 +166,7 @@ export default function RankingsPage() {
       <div className="absolute top-4 left-4">
         <BackArrow />
       </div>
-      
+
       {/* Date Picker */}
       <DatePicker
         startDate={startDate}
@@ -188,26 +187,29 @@ export default function RankingsPage() {
         {/* WordCloud */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-center items-center overflow-auto">
           <h1 className="text-2xl font-semibold">Most Popular Artists</h1>
-          <WordCloud  
-            setSelectedArtists={setSelectedArtists} 
-            data={artistsRankings} 
-            width={850} 
-            height={300} 
+          <WordCloud
+            setSelectedArtists={setSelectedArtists}
+            data={artistsRankings}
+            width={850}
+            height={300}
           />
         </div>
 
-
         {/* Heatmap */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col items-center overflow-auto">
-            <h1 className="text-2xl font-semibold">Popularity Over Time</h1>
-            <HeatmapChart data={heatmapData.reverse()} width={650} height={1600} selectedArtists={selectedArtists}/>
+          <h1 className="text-2xl font-semibold">Popularity Over Time</h1>
+          <HeatmapChart
+            data={heatmapData.reverse()}
+            width={650}
+            height={1600}
+            selectedArtists={selectedArtists}
+          />
         </div>
 
         {/* Radar Chart */}
         <div className="p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto">
           <h1 className="text-2xl font-semibold mb-2">Song Properties</h1>
-          <Radartest  songsData={selectedSongs}/>
-          
+          <Radartest songsData={selectedSongs} />
         </div>
 
         {/* Song List */}
