@@ -246,8 +246,8 @@ export default function RankingsPage() {
           <h1 className="text-2xl font-semibold">Popularity Over Time</h1>
           <HeatmapChart
             data={heatmapData.reverse()}
-            width={650}
-            height={1600}
+            width={expandedCell === 2 ? 1100 : 650}  // Increase width when expanded
+            height={expandedCell === 2 ? 1600 : 800}
             selectedArtists={selectedArtists}
           />
         </div>

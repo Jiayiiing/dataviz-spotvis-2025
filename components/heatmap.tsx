@@ -87,24 +87,14 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
     },
     legend: {
       position: "right",
+      labels: {
+        colors: "#FFFFFF",
+      },
     },
-    /*
-    annotations: {
-      yaxis: reorderedData
-        .filter(entry => selectedNames.includes(entry.name)) // Find where selected names exist
-        .map(entry => ({
-          y: entry.name,       // Place annotation at this y-value
-          borderColor: "#fff59f",  // Border color (change if needed)
-          borderWidth: 20,
-          strokeDashArray: 0,
-          opacity: 1,
-        })),
-    },
-    */
     plotOptions: {
       heatmap: {
         radius: 2.5,
-        shadeIntensity: 0.7,
+        shadeIntensity: 0.85,
         useFillColorAsStroke: false,
         distributed: false,
         colorScale: {
@@ -112,12 +102,10 @@ const HeatmapChart: React.FC<HeatMapProps> = ({ data, width, height, selectedArt
           min: 1,
           max: 50,
           ranges: [
-            //{ from: 1, to: 50, color: "#1DB954" },  // Green for top-ranked
-            { from: 1, to: 1, color: "#00FFFF", name: "Top of the charts" },
-            { from: 2, to: 15, color: "#1DB954" },  // Green for top-ranked
-            { from: 16, to: 35, color: "#FFB300" }, // Yellow/Orange for mid-ranked
-            { from: 36, to: 50, color: "#FF0000" }, // Red for lower ranks
-            { from: 0, to: 0, color: "#000000", name: "Outside top 50"},
+            { from: 1, to: 11, color: "#008000", name: "1 - 10" }, 
+            { from: 11, to: 26, color: "#FFB300", name: "11 - 25" },
+            { from: 26, to: 50, color: "#FF0000", name: "26 - 50" },
+            { from: 0, to: 0, color: "#2E2E2E", name: "Not in top 50" },
           ],
         },
       },

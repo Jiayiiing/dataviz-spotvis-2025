@@ -151,13 +151,13 @@ export default function SongList({
                   )}
                 </div>
                 <div className="flex-1">
-                  <div className="font-bold text-lg">{ranking.Songs.name}</div>
-                  <div className="italic text-gray-600">
-                    {ranking.Songs.Song_artists
+                  <div className="font-bold text-lg text-white">Title: {ranking.Songs.name}</div>
+                  <div className="italic text-gray-600 text-white">
+                    Artists: {ranking.Songs.Song_artists
                       .map((songArtist) => songArtist.Artists.name)
                       .join(", ") || "Unknown Artist"}
                   </div>
-                  <div className="text-sm text-gray-500">Rank: {ranking.daily_rank}</div>
+                  <div className="text-sm text-gray-500 text-white">Rank: {ranking.daily_rank}</div>
                 </div>
                 <button
                   onClick={(event) => {
