@@ -254,10 +254,10 @@ export default function RankingsPage() {
 
         {/* Radar Chart */}
         <div
-          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center 
-      transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c] ${
+          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto
+      transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c ] ${
         expandedCell === 3
-          ? "col-span-2 row-span-2 w-full h-full fixed top-0 justify-center items-center left-0 z-50 scale-150"
+          ? "col-span-2 row-span-2 w-full h-full fixed top-0 justify-center items-center left-0 z-50 scale-150 "
           : ""
       }`}
           onClick={() => toggleExpand(3)}
