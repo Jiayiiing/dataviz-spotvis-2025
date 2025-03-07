@@ -95,7 +95,14 @@ export default function SongList({
   const effectiveDate = hasUserInteracted ? selectedDate : uniqueDates[0];
 
   return (
-    <div>
+    <div className="relative">
+       {/* Clear Selection Button */}
+      <button
+        onClick={() => onSelectionChange([])}
+        className="absolute top-0 right-0 mt-2 mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 shadow-md"
+      >
+        Clear Selection
+      </button>
       <h2 className="text-xl font-bold mb-4">Song List</h2>
 
       {/* Date Selector */}
