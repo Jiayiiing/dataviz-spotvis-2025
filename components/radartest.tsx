@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import ParallelPlot from "./parallelPlot";
 
 // Register necessary chart components
 ChartJS.register(
@@ -85,6 +86,10 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
 
     setData(formattedData);
   }, [songsData]); // Update chart when `songsData` changes
+
+  if (songsData.length > 10) {
+    return <ParallelPlot songsData={songsData} />;
+  }
 
   const chartData = {
     labels: [
