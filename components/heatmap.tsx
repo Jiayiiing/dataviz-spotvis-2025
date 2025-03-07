@@ -11,7 +11,7 @@ type Series = {
     data: SeriesEntry[];
   };
 
-type Artist = { id: number, name: string };
+type Artist = { name: string };
 type HeatMapProps = {
     data: Series[];
     width?: number;

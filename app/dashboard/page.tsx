@@ -30,8 +30,8 @@ type Ranking = {
   Songs: Song;
 };
 
-type Word = { text: string; value: number; id: number };
-type Artist = { id: number, name: string };
+type Word = { text: string; value: number;};
+type Artist = { name: string };
 type SongArtist = { Artists: Artist };
 type SongsContainer = { [key: string]: SongArtist[] | unknown };
 type DataEntry = { daily_rank: number; Songs: SongsContainer };
@@ -40,8 +40,7 @@ type Series = {name: string, data: SeriesEntry[]}
 
 // Calculate artist popularity for WordCloud
 const calculateArtistPopularity = (data: DataEntry[]): Word[] => {  
-  //const artistScores: Record<string, number> = {};
-  const artistScores = new Map<number, { name: string; score: number }>();
+  const artistScores = new Map<string, number>(); // Map keyed by artist name
 
   data.forEach((entry) => {
     const points = 51 - entry.daily_rank;
@@ -51,29 +50,26 @@ const calculateArtistPopularity = (data: DataEntry[]): Word[] => {
 
     if (!artistArray) return;
 
+    const processedArtists = new Set<string>(); // Track processed artist names for this entry
+
     artistArray.forEach((artistEntry: SongArtist) => {
-      // Old version:
-      //const artistName = artistEntry.Artists.name;
-      //artistScores[artistName] = (artistScores[artistName] || 0) + points;
+      const name = artistEntry.Artists.name.trim(); // Sanitize name
 
-      const { id, name } = artistEntry.Artists; // Extract artist ID & name
+      if (processedArtists.has(name)) return; // Skip duplicate artist in this entry
+      processedArtists.add(name);
 
-      // If the artist is not in the map, initialize them with a score of 0
-      if (!artistScores.has(id)) {
-        artistScores.set(id, { name, score: 0 });
-      }
-
-      // Increment the artist's score
-      artistScores.get(id)!.score += points;
+      artistScores.set(name, (artistScores.get(name) || 0) + points);
     });
   });
 
-  return Array.from(artistScores, ([id, { name, score }]) => ({
-    id, 
+  return Array.from(artistScores, ([name, score]) => ({
     text: name, 
     value: score, 
   }));
 };
+
+
+
 
 const formatHeatmapData = (data: Ranking[]): Series[] => {
   const artistMap = new Map();
