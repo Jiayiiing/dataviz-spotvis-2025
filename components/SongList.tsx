@@ -11,7 +11,7 @@ type Song = {
   danceability: number;
   valence: number;
   acousticness: number;
-  instrumentalness: number;
+  popularity: number;
   liveness: number; 
   Song_artists: SongArtist[];};
 

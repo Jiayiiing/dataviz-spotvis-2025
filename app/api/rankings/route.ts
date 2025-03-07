@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
         danceability,
         valence,
         acousticness,
-        instrumentalness,
+        popularity,
         liveness,
           Song_artists (
             Artists (
