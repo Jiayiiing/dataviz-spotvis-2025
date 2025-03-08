@@ -145,7 +145,7 @@ export default function SongList({
               );
             })
             .map((ranking) => (
-              <div key={ranking.spotify_id} className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md hover:shadow-lg">
+              <div key={ranking.spotify_id} className="flex items-center p-4 h-20 border border-gray-300 rounded-lg shadow-md hover:shadow-lg">
                 <div className="w-16 h-16 mr-4">
                   {albumCovers[ranking.spotify_id] ? (
                     <img
@@ -158,22 +158,27 @@ export default function SongList({
                   )}
                 </div>
                 <div className="flex-1">
-                  <div className="font-bold text-lg text-white">Title: {ranking.Songs.name}</div>
-                  <div className="italic text-gray-600 text-white">
-                    Artists: {ranking.Songs.Song_artists
+                  <div className="text-sm text-white">
+                    <span className="font-bold">Title:</span> {ranking.Songs.name}
+                  </div>
+                  <div className="text-sm text-white">
+                    <span className="font-bold">Artists:</span> {ranking.Songs.Song_artists
                       .map((songArtist) => songArtist.Artists.name)
                       .join(", ") || "Unknown Artist"}
                   </div>
-                  <div className="text-sm text-gray-500 text-white">Rank: {ranking.daily_rank}</div>
+                  <div className="text-sm text-white">
+                    <span className="font-bold">Rank:</span> {ranking.daily_rank}
+                  </div>
                 </div>
                 <button
                   onClick={(event) => {
                     event.stopPropagation(); 
                     handlePlusButtonClick(ranking.Songs);}}
-                  className={`p-2 rounded ${selectedSongs.some((s) => s.spotify_id === ranking.Songs.spotify_id) ? "bg-green-500 text-white" : "bg-gray-300 text-black"}`}
+                  className={`p-2 ml-auto rounded ${selectedSongs.some((s) => s.spotify_id === ranking.Songs.spotify_id) ? "bg-green-500 text-white" : "bg-gray-300 text-black"}`}
                 >
                   +
                 </button>
+                
               </div>
             ));
         })()}

@@ -85,7 +85,7 @@ export default function Home() {
   return (
     <div className="p-4 max-w-md mx-auto absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <button className="pb-1" onClick={openPopup}>
-        <h1 className="flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full font-bold hover:bg-green-900">?</h1>
+        <h1 className="flex items-center justify-center w-20 h-8 bg-green-700 text-white rounded hover:bg-green-900">About Us</h1>
       </button>
       {/* AboutUsPopup component */}
       <AboutUs isOpen={isPopupOpen} onClose={closePopup} />
@@ -93,14 +93,7 @@ export default function Home() {
       <h1 className="pb-2 text-4xl font-bold mb-4 text-center">Welcome to Spotivis!</h1>
 
       <div className="flex items-center justify-center mb-4 space-x-4">
-        <h1 className="text-2xl font-bold">Select a Country</h1>
-        <button className="hover:opacity-80" onClick={handleRandomCountry}>
-          <img 
-            src="https://static-00.iconduck.com/assets.00/perspective-dice-six-faces-random-icon-1024x1024-20is6x9z.png"
-            alt="random country" 
-            className="w-8 h-8"
-          />
-        </button>
+        <h1 className="text-2xl font-bold">Choose a Country</h1>
       </div>
 
       {loading && (
@@ -117,7 +110,7 @@ export default function Home() {
               onChange={handleSearch}
               onFocus={() => setShowDropdown(true)}
               placeholder="Search for a country..."
-              className="border p-2 rounded w-full text-white"
+              className="border p-2 rounded text-white w-1/2"
             />
             <button
               onClick={() => {
@@ -131,9 +124,15 @@ export default function Home() {
                   chooseCountry(selectedCountry.id, selectedCountry.country_name, selectedCountry.country);
                 }
               }}
-              className="border p-2 rounded w-full bg-green-700 text-white hover:bg-green-900"
+              className="border p-2 rounded bg-green-700 text-white hover:bg-green-900 w-1/4"
             >
-              Search Country
+              Search
+            </button>
+            <button
+              onClick={handleRandomCountry}
+              className="border p-2 rounded bg-green-700 text-white hover:bg-green-900 w-1/4"
+            >
+              Random
             </button>
           </div>
           {showDropdown && (

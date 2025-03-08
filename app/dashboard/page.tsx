@@ -247,7 +247,7 @@ export default function RankingsPage() {
           <HeatmapChart
             data={heatmapData.reverse()}
             width={expandedCell === 2 ? 1100 : 650}  // Increase width when expanded
-            height={expandedCell === 2 ? 1600 : 800}
+            height={expandedCell === 2 ? 1700 : 1600}
             selectedArtists={selectedArtists}
           />
         </div>
