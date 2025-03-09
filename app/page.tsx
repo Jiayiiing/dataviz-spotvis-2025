@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import AboutUs from "@/components/aboutUs"
+import AboutUs from "@/components/aboutUs";
+import Image from "next/image";
 
 export default function Home() {
   const [countries, setCountries] = useState<any[]>([]);
@@ -69,7 +70,11 @@ export default function Home() {
   const handleRandomCountry = () => {
     const randomCountry =
       countries[Math.floor(Math.random() * countries.length)];
-    chooseCountry(randomCountry.id, randomCountry.country_name, randomCountry.country);
+    chooseCountry(
+      randomCountry.id,
+      randomCountry.country_name,
+      randomCountry.country
+    );
   };
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -84,13 +89,28 @@ export default function Home() {
 
   return (
     <div className="p-4 max-w-md mx-auto absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <button className="pb-1" onClick={openPopup}>
-        <h1 className="flex items-center justify-center w-20 h-8 bg-green-700 text-white rounded hover:bg-green-900">About Us</h1>
-      </button>
-      {/* AboutUsPopup component */}
-      <AboutUs isOpen={isPopupOpen} onClose={closePopup} />
+      <div className="relative flex justify-center pb-4">
+        <Image
+          src="/spotivis.png"
+          alt="Spotivis logo"
+          width={170}
+          height={170}
+        />
+      </div>
 
-      <h1 className="pb-2 text-4xl font-bold mb-4 text-center">Welcome to Spotivis!</h1>
+      <h1 className="text-4xl font-bold mb-4 text-center">
+        Welcome to Spotivis!
+      </h1>
+
+      <div className="relative flex justify-center">
+        <button className="pb-4" onClick={openPopup}>
+          <h1 className="flex items-center justify-center w-20 h-8 bg-green-700 text-white rounded hover:bg-green-900">
+            About Us
+          </h1>
+        </button>
+        {/* AboutUsPopup component */}
+        <AboutUs isOpen={isPopupOpen} onClose={closePopup} />
+      </div>
 
       <div className="flex items-center justify-center mb-4 space-x-4">
         <h1 className="text-2xl font-bold">Choose a Country</h1>
@@ -121,7 +141,11 @@ export default function Home() {
                 );
 
                 if (selectedCountry) {
-                  chooseCountry(selectedCountry.id, selectedCountry.country_name, selectedCountry.country);
+                  chooseCountry(
+                    selectedCountry.id,
+                    selectedCountry.country_name,
+                    selectedCountry.country
+                  );
                 }
               }}
               className="border p-2 rounded bg-green-700 text-white hover:bg-green-900 w-1/4"
@@ -138,19 +162,20 @@ export default function Home() {
           {showDropdown && (
             <ul className="absolute z-10 bg-dark border border-gray-300 rounded w-full mt-1 max-h-60 overflow-y-auto shadow-md">
               {filteredCountries.length > 0 ? (
-                filteredCountries.filter((country) => country.country_name)
-                .map((country) => (
-                  <li
-                    key={country.id}
-                    className="p-2 hover:bg-gray-700 cursor-pointer"
-                    onClick={() => {
-                      setSearch(country.country_name);
-                      setShowDropdown(false);
-                    }}
-                  >
-                    {country.country_name}
-                  </li>
-                ))
+                filteredCountries
+                  .filter((country) => country.country_name)
+                  .map((country) => (
+                    <li
+                      key={country.id}
+                      className="p-2 hover:bg-gray-700 cursor-pointer"
+                      onClick={() => {
+                        setSearch(country.country_name);
+                        setShowDropdown(false);
+                      }}
+                    >
+                      {country.country_name}
+                    </li>
+                  ))
               ) : (
                 <li className="p-2 text-gray-500">No results found</li>
               )}
@@ -158,6 +183,8 @@ export default function Home() {
           )}
         </div>
       )}
+
+      
     </div>
   );
 }
