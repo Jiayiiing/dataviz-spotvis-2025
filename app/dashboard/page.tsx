@@ -171,11 +171,6 @@ export default function RankingsPage() {
     setIsPopupOpen(false);
   };
 
-  const [isExpanded, setIsExpanded] = useState(false); // State for expansion toggle
-
-  const toggleRadarExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   const toggleExpand = (index: number) => {
     setExpandedCell(expandedCell === index ? null : index);
