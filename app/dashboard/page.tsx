@@ -222,15 +222,23 @@ export default function RankingsPage() {
       <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-3xl mt-6 h-[75vh] overflow-hidden">
         {/* WordCloud */}
         <div
-          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-center items-center overflow-auto 
-      transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c] ${
-        expandedCell === 1
-          ? "col-span-2 row-span-2 w-full h-full fixed top-0 left-0 z-50 scale-150"
-          : ""
-      }`}
-      
-          onClick={() => toggleExpand(1)}
+          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto
+          transition-all duration-300 ease-in-out cursor-pointer] 
+          ${expandedCell === 1 ? "fixed top-0 left-0 w-full h-full z-50" : "relative"}`}
         >
+
+          <button
+            className="absolute fixed top-2 right-2 flex items-center justify-center w-9 h-9 bg-green-800 text-white rounded font-bold hover:bg-green-900 z-60"
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleExpand(1);
+            }}
+          >
+            ⛶
+          </button>
+
+          
+          <div className={`flex flex-col justify-start items-center overflow-auto${expandedCell === 1 ? "fixed h-full scale-150 flex items-center justify-center" : ""}`}>
           <h1 className="text-2xl font-semibold">Most Popular Artists</h1>
           <WordCloud
             setSelectedArtists={setSelectedArtists}
@@ -238,18 +246,25 @@ export default function RankingsPage() {
             width={850}
             height={300}
           />
+          </div>
         </div>
 
         {/* Heatmap */}
         <div
-          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col items-center overflow-auto 
-      transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c] ${
-        expandedCell === 2
-          ? "col-span-2 row-span-2 w-full h-full fixed top-0 left-0 z-50 scale-100"
-          : ""
-      }`}
-          onClick={() => toggleExpand(2)}
+          className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto
+          transition-all duration-300 ease-in-out cursor-pointer] 
+          ${expandedCell === 2 ? "fixed top-0 left-0 w-full h-full z-50" : "relative"}`}
         >
+          <button
+            className="absolute top-2 right-2 flex items-center justify-center w-9 h-9 bg-green-800 text-white rounded font-bold hover:bg-green-900"
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleExpand(2);
+            }}
+          >
+            ⛶
+          </button>
+
           <h1 className="text-2xl font-semibold">Popularity Over Time</h1>
           <HeatmapChart
             data={heatmapData.reverse()}
@@ -260,22 +275,23 @@ export default function RankingsPage() {
         </div>
 
         {/* Radar Chart */}
-        {/* 
         <div
           className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto
-      transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c ] ${
-        expandedCell === 3
-          ? "col-span-2 row-span-2 w-full h-full fixed top-0 justify-center items-center left-0 z-50 scale-150 "
-          : ""
-      }`}
-          onClick={() => toggleExpand(3)}
+          transition-all duration-300 ease-in-out cursor-pointer] 
+          ${expandedCell === 3 ? "fixed top-0 left-0 w-full h-full z-50" : "relative"}`}
         >
-          <h1 className="text-2xl font-semibold mb-2">Song Properties </h1>
-          
-          <Radarchart_explain isOpen={isPopupOpen} onClose={closePopup} />
-          <div className="relative flex justify-center items-center w-full">
-            <button
-              className="absolute top-2 left-2 flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full font-bold hover:bg-green-900"
+
+        <button
+            className="absolute top-2 right-2 flex items-center justify-center w-9 h-9 bg-green-800 text-white rounded font-bold hover:bg-green-900"
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleExpand(3);
+            }}
+          >
+            ⛶
+          </button>
+          <button
+              className="absolute top-2 left-2 flex items-center justify-center w-9 h-9 bg-green-800 text-white rounded font-bold hover:bg-green-900"
               onClick={(event) => {
                 event.stopPropagation();
                 openPopup();}
@@ -283,50 +299,15 @@ export default function RankingsPage() {
             >
               ?
             </button>
+
+          <h1 className="text-2xl font-semibold mb-2">Song Properties </h1>
+      
+          <Radarchart_explain isOpen={isPopupOpen} onClose={closePopup} />
+          <div className="relative flex justify-center items-center w-full">
            <Radartest songsData={selectedSongs} />
           </div>
-          
-        
 
         </div>
-        */}
-        <div
-  className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto
-    transition-all duration-300 ease-in-out ${
-      isExpanded ? "w-full h-full fixed top-0 left-0 z-50 flex justify-center items-center scale-150" : ""
-    }`}
->
-  <h1 className="text-2xl font-semibold mb-2">Song Properties</h1>
-
-  <Radarchart_explain isOpen={isPopupOpen} onClose={closePopup} />
-
-  <div className="relative flex justify-center items-center w-full">
-    {/* Popup Button (Top Left) */}
-    <button
-      className="absolute top-2 left-2 flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full font-bold hover:bg-green-900"
-      onClick={(event) => {
-        event.stopPropagation();
-        openPopup();
-      }}
-    >
-      ?
-    </button>
-
-    {/* Expand Button (Top Right) */}
-    <button
-    className="absolute top-4 right-1/4 transform translate-x-1/2 flex items-center justify-center w-12 h-12 bg-green-700 text-white rounded-full font-bold hover:bg-green-900"
-    onClick={(event) => {
-      event.stopPropagation();
-      toggleRadarExpand();
-      }}
-    >
-      ⛶
-    </button>
-
-
-    <Radartest songsData={selectedSongs} />
-  </div>
-</div>
 
 
         {/* Song List */}

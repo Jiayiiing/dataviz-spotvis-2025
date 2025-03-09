@@ -17,7 +17,7 @@ interface AboutUsPopupProps {
         </div>
         <div className="popup-content">
           <p>We are Spotivis!</p>
-          <p></p>
+          <p>Dataset: https://www.kaggle.com/datasets/asaniczka/top-spotify-songs-in-73-countries-daily-updated?resource=download</p>
         </div>
       </div>
     </div>
