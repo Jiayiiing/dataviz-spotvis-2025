@@ -128,6 +128,7 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
       .attr("y", innerHeight + 20)
       .attr("text-anchor", "middle")
       .style("font-size", "10px")
+      .style("fill", "white")
       .text((d) => d);
   };
 
