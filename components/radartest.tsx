@@ -124,6 +124,8 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
               },
               scales: {
                 r: {
+                  min: 0,
+                  max: 1,
                   grid: {
                     color: "rgb(92, 92, 92)", // Grid lines color
                   },
@@ -132,6 +134,14 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
                   },
                   ticks: {
                     color: "white", // Labels (numbers) color
+                    backdropColor: "transparent",
+                  },
+                  pointLabels: {
+                    color: "white", // Change label color here
+                    font: {
+                      size: 12, // Adjust label size if needed
+                      weight: "bold", // Make text bold
+                    },
                   },
                 },
               },

@@ -16,6 +16,7 @@ interface AboutUsPopupProps {
           <button className="close-btn" onClick={onClose}>x</button>
         </div>
         <div className="popup-content">
+          <p>Developers: Mille Kåge millek@kth.se, Helge Kvarfordt helgekv@kth.se, Eric Wernström ericwer@kth.se, Ludwig Flod lflod@kth.se, Jiayi Guo jiayig@kth.se</p>
           <p>We are Spotivis!</p>
           <p>Dataset: https://www.kaggle.com/datasets/asaniczka/top-spotify-songs-in-73-countries-daily-updated?resource=download</p>
         </div>
