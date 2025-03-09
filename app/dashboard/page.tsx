@@ -171,6 +171,12 @@ export default function RankingsPage() {
     setIsPopupOpen(false);
   };
 
+  const [isExpanded, setIsExpanded] = useState(false); // State for expansion toggle
+
+  const toggleRadarExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   const toggleExpand = (index: number) => {
     setExpandedCell(expandedCell === index ? null : index);
   };
@@ -222,6 +228,7 @@ export default function RankingsPage() {
           ? "col-span-2 row-span-2 w-full h-full fixed top-0 left-0 z-50 scale-150"
           : ""
       }`}
+      
           onClick={() => toggleExpand(1)}
         >
           <h1 className="text-2xl font-semibold">Most Popular Artists</h1>
@@ -253,6 +260,7 @@ export default function RankingsPage() {
         </div>
 
         {/* Radar Chart */}
+        {/* 
         <div
           className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto
       transition-all duration-300 ease-in-out cursor-pointer hover:[--grid-bg-color:#2727278c ] ${
@@ -262,7 +270,8 @@ export default function RankingsPage() {
       }`}
           onClick={() => toggleExpand(3)}
         >
-          <h1 className="text-2xl font-semibold mb-2">Song Properties</h1>
+          <h1 className="text-2xl font-semibold mb-2">Song Properties </h1>
+          
           <Radarchart_explain isOpen={isPopupOpen} onClose={closePopup} />
           <div className="relative flex justify-center items-center w-full">
             <button
@@ -274,9 +283,51 @@ export default function RankingsPage() {
             >
               ?
             </button>
-            <Radartest songsData={selectedSongs} />
+           <Radartest songsData={selectedSongs} />
           </div>
+          
+        
+
         </div>
+        */}
+        <div
+  className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto
+    transition-all duration-300 ease-in-out ${
+      isExpanded ? "w-full h-full fixed top-0 left-0 z-50 flex justify-center items-center scale-150" : ""
+    }`}
+>
+  <h1 className="text-2xl font-semibold mb-2">Song Properties</h1>
+
+  <Radarchart_explain isOpen={isPopupOpen} onClose={closePopup} />
+
+  <div className="relative flex justify-center items-center w-full">
+    {/* Popup Button (Top Left) */}
+    <button
+      className="absolute top-2 left-2 flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full font-bold hover:bg-green-900"
+      onClick={(event) => {
+        event.stopPropagation();
+        openPopup();
+      }}
+    >
+      ?
+    </button>
+
+    {/* Expand Button (Top Right) */}
+    <button
+    className="absolute top-4 right-1/4 transform translate-x-1/2 flex items-center justify-center w-12 h-12 bg-green-700 text-white rounded-full font-bold hover:bg-green-900"
+    onClick={(event) => {
+      event.stopPropagation();
+      toggleRadarExpand();
+      }}
+    >
+      ⛶
+    </button>
+
+
+    <Radartest songsData={selectedSongs} />
+  </div>
+</div>
+
 
         {/* Song List */}
         <div
