@@ -55,6 +55,7 @@ export default function SongList({
     }
   }, [uniqueDates, selectedDate]); // Runs when uniqueDates or selectedDate changes
 
+  /*
   useEffect(() => {
     const fetchAlbumCovers = async () => {
       const uniqueIds = Array.from(
@@ -76,6 +77,7 @@ export default function SongList({
 
     fetchAlbumCovers();
   }, [rankings]);
+  */
 
   const handlePlusButtonClick = (song: Song) => {
     if (selectedSongs.some((s) => s.spotify_id === song.spotify_id)) {
@@ -157,6 +159,7 @@ export default function SongList({
                 key={ranking.spotify_id}
                 className="flex items-center p-4 h-20 border border-gray-300 rounded-lg shadow-md hover:shadow-lg"
               >
+                {/*
                 <div className="w-16 h-16 mr-4">
                   {albumCovers[ranking.spotify_id] ? (
                     <img
@@ -168,6 +171,7 @@ export default function SongList({
                     <span>Loading...</span>
                   )}
                 </div>
+                */}
                 <div className="flex-1">
                   <div className="text-sm text-white">
                     <span className="font-bold">Title:</span>{" "}
