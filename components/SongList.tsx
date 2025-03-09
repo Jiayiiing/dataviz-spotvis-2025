@@ -53,7 +53,7 @@ export default function SongList({
     }
   }, [uniqueDates, selectedDate]); // Runs when uniqueDates or selectedDate changes
 
-  /*
+  
   useEffect(() => {
     const fetchAlbumCovers = async () => {
       const uniqueIds = Array.from(new Set(rankings.map((entry) => entry.spotify_id))); // Unique IDs
@@ -73,7 +73,7 @@ export default function SongList({
   
     fetchAlbumCovers();
   }, [rankings]);
-  */
+  
   
   const handlePlusButtonClick = (song: Song) => {
     if (selectedSongs.some((s) => s.spotify_id === song.spotify_id)) {
