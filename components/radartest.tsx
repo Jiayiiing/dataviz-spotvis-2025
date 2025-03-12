@@ -27,6 +27,7 @@ ChartJS.register(
 export default function Radartest({ songsData }: { songsData: any[] }) {
   const [data, setData] = useState<any[]>([]);
   const [colorMap, setColorMap] = useState<Record<string, { borderColor: string; backgroundColor: string }>>({});
+  const [highlightedSong, setHighlightedSong] = useState<string | null>(null);
 
   useEffect(() => {
     //console.log("Radartest received songs: ", songsData);
@@ -52,12 +53,18 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
     // Generate colors only for new songs
     uniqueData.forEach((song) => {
       if (!newColorMap[song.spotify_id]) {
-        const borderColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-          Math.random() * 255
-        )}, ${Math.floor(Math.random() * 255)})`;
+        let borderColor: string;
+        
+        // Keep generating a color until it's not white
+        do {
+          borderColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+            Math.random() * 255
+          )}, ${Math.floor(Math.random() * 255)})`;
+        } while (borderColor === 'rgb(255, 255, 255)'); // Check for white color
+        
         newColorMap[song.spotify_id] = {
           borderColor,
-          backgroundColor: borderColor.replace("rgb", "rgba").replace(")", ", 0.2)"),
+          backgroundColor: borderColor.replace("rgb", "rgba").replace(")", ", 0.2)"), // Apply transparency
         };
       }
     });
@@ -66,27 +73,32 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
     setColorMap(newColorMap);
 
     // Format data for radar chart
-    const formattedData = uniqueData.map((song) => ({
-      label: song.name,
-      data: [
-        song.energy,
-        song.danceability,
-        song.valence,
-        song.acousticness,
-        song.popularity / 100,
-        song.liveness,
-      ],
-      fill: true,
-      backgroundColor: newColorMap[song.spotify_id].backgroundColor, // Persistent background color
-      borderColor: newColorMap[song.spotify_id].borderColor, // Persistent line color
-      pointBackgroundColor: newColorMap[song.spotify_id].borderColor, // Persistent corners color
+    const formattedData = uniqueData.map((song) => {
+      const isHighlighted = song.spotify_id === highlightedSong; // Check if song is highlighted
+      return {
+        label: song.name,
+        data: [
+          song.energy,
+          song.danceability,
+          song.valence,
+          song.acousticness,
+          song.popularity / 100,
+          song.liveness,
+        ],
+        fill: true,
+        backgroundColor: isHighlighted 
+        ? "white" // Set the background to white for the highlighted song
+        : newColorMap[song.spotify_id].backgroundColor, 
+      borderColor: isHighlighted ? "white" : newColorMap[song.spotify_id].borderColor, 
+      borderWidth: isHighlighted ? 6 : 2, 
+      pointBackgroundColor: isHighlighted ? "white" : newColorMap[song.spotify_id].borderColor, 
       pointBorderColor: "#fff",
       pointHoverBackgroundColor: "#fff",
-      pointHoverBorderColor: newColorMap[song.spotify_id].borderColor,
-    }));
-
+      pointHoverBorderColor: isHighlighted ? "white" : newColorMap[song.spotify_id].borderColor, 
+      };
+    });
     setData(formattedData);
-  }, [songsData]); // Update chart when `songsData` changes
+  }, [songsData, highlightedSong]);
 
   if (songsData.length > 5) {
     return <ParallelPlot songsData={songsData} />;
@@ -104,7 +116,9 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
     datasets: data,
   };
 
-
+  const handleLegendClick = (songId: string) => {
+    setHighlightedSong((prev) => (prev === songId ? null : songId)); 
+  };
 
   return (
     <div className="text-center">
@@ -145,6 +159,12 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
                 legend: {
                   labels: {
                     color: "white", // Legend text color
+                  },
+                  onClick: (e, legendItem, legend) => {
+                    if (legendItem.datasetIndex !== undefined) {
+                      const songId = songsData[legendItem.datasetIndex].spotify_id;
+                      handleLegendClick(songId); 
+                    }
                   },
                 },
               },
