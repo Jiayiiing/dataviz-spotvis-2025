@@ -88,7 +88,7 @@ export default function Radartest({ songsData }: { songsData: any[] }) {
     setData(formattedData);
   }, [songsData]); // Update chart when `songsData` changes
 
-  if (songsData.length > 10) {
+  if (songsData.length > 5) {
     return <ParallelPlot songsData={songsData} />;
   }
 

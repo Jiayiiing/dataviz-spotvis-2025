@@ -32,8 +32,8 @@ const attributes = [
 
 const ParallelPlot: React.FC<ParallelPlotProps> = ({
   songsData,
-  width = 500,
-  height = 300,
+  width = 600,
+  height = 400,
 }) => {
   const [highlightedSong, setHighlightedSong] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -44,9 +44,11 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
     songsData.forEach((song) => {
       if (!newColorMap.has(song.spotify_id)) {
         // Generate a new color if it hasn't been assigned already
-        const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-          Math.random() * 255
-        )}, ${Math.floor(Math.random() * 255)})`;
+        const newColor = `rgb(${
+          Math.floor(Math.random() * 206) + 50
+        }, ${Math.floor(Math.random() * 206) + 50}, ${Math.floor(
+          Math.random() * 206
+        ) + 50})`;
         newColorMap.set(song.spotify_id, newColor);
       }
     });
@@ -94,7 +96,15 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
       .attr("class", "axis")
       .attr("transform", (d) => `translate(${x(d)})`)
       .each(function (d) {
-        d3.select(this).call(d3.axisLeft(y[d]));
+        d3.select(this)
+          .call(d3.axisLeft(y[d]))
+          .selectAll("path") 
+          .style("stroke-width", 2); 
+
+        d3.select(this)
+          .selectAll("text") 
+          .style("font-size", "12px") 
+          .style("fill", "white"); 
       });
 
     // Draw lines
@@ -112,11 +122,11 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
             )
       )
       .style("fill", "none")
-      .style("stroke", (d) => colorMap.get(d.spotify_id) ?? "gray") // Use the persistent color from the colorMap
-      .style(
-        "stroke-width",
-        (d, i) => (highlightedSong !== null && highlightedSong === i ? 3 : 1)
-      );
+      .style("stroke", (d, i) =>
+        highlightedSong !== null && highlightedSong === i ? "white" : colorMap.get(d.spotify_id) ?? "gray"
+      ) // Change color to white when highlighted
+      .style("opacity", (d, i) => (highlightedSong !== null && highlightedSong !== i ? 0.3 : 1)) // Reduce opacity for non-highlighted lines
+      .style("stroke-width",2);
 
     // Draw attribute labels
     g.selectAll(".label")
@@ -127,7 +137,8 @@ const ParallelPlot: React.FC<ParallelPlotProps> = ({
       .attr("x", (d) => x(d) ?? 0)
       .attr("y", innerHeight + 20)
       .attr("text-anchor", "middle")
-      .style("font-size", "10px")
+      .style("font-size", "14px")
+      .style("font-weight", "bold")
       .style("fill", "white")
       .text((d) => d);
   };
