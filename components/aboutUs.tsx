@@ -45,6 +45,13 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
               Kaggle - Top Spotify Songs in 73 Countries
             </a>
           </p>
+          <p><strong>Author:</strong> Asaniczka</p>
+            <p>The dataset includes the top 50 songs each day from 2023-10-18 to current date in 73 different 
+              countries and globally. It has 25 attributes where 8 of them are categorical, 13 quantitative, 
+              1 ordinal and then the name of the songs, artists and the spotify_id. For this website we are 
+              using spotify_id, name of artists and songs, dates, countries and six attributes describing songs.
+              The full country names were retrieved through an api with the use of the country codes.
+            </p>
           <p><strong>References:</strong></p>
           <p className="max-w-lg text-sm">
             <strong>Radar Chart: </strong>
@@ -64,6 +71,16 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
               className="text-blue-400 underline"
             >
               https://apexcharts.com/docs/chart-types/heatmap-chart/
+            </a>
+          </p>
+          <p className="max-w-lg text-sm">
+            <strong>Country fullnames API: </strong>
+            <a>Florez, Fayder. “REST Countries.” Restcountries.com, 2025, restcountries.com/#rest-countries. Available at: </a>
+            <a
+              href="https://restcountries.com/#rest-countries"
+              className="text-blue-400 underline"
+            >
+              https://restcountries.com/#rest-countries
             </a>
           </p>
         </div>
