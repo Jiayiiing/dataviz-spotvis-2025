@@ -32,9 +32,9 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
             This was a project made for the course DH2321 Information Visualization at KTH Royal Institute of Technology.
           </p>
           <p className="max-w-lg text-sm">
-            <strong>Developers:</strong> <br></br>Mille Kåge - millek@kth.se<br></br>Helge
-            Kvarfordt - helgekv@kth.se<br></br>Eric Wernström - ericwer@kth.se<br></br>Ludwig
-            Flod - lflod@kth.se<br></br>Jiayi Guo - jiayig@kth.se
+            <strong>Team:</strong><br></br><strong>Mille Kåge - millek@kth.se</strong><br></br>Developer, design and user testing<br></br><strong>Helge
+            Kvarfordt - helgekv@kth.se</strong><br></br>Developer and user testing<br></br><strong>Eric Wernström - ericwer@kth.se</strong><br></br>Developer and user testing<br></br><strong>Ludwig
+            Flod - lflod@kth.se</strong><br></br>Developer and data handling<br></br><strong>Jiayi Guo - jiayig@kth.se</strong><br></br>Developer and data handling
           </p>
           <p className="max-w-lg text-sm">
             <strong>Dataset used: </strong>
