@@ -35,7 +35,12 @@ export default function DatePicker({
     switch (selectedRange) {
       case "Week":
         newEndDate = format(addWeeks(new Date(newStartDate), 1), "yyyy-MM-dd");
-        break; 
+        
+        newEndDate = format(
+          new Date(new Date(newEndDate).getTime() - 1 * 24 * 60 * 60 * 1000),
+          "yyyy-MM-dd"
+        ); // Subtract 1 day
+        break;
       case "Month":
         newEndDate = format(addMonths(new Date(newStartDate), 1), "yyyy-MM-dd");
         break;
