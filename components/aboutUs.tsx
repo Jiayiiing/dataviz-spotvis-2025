@@ -55,7 +55,7 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
           <p><strong>References:</strong></p>
           <p className="max-w-lg text-sm">
             <strong>Radar Chart: </strong>
-            <a>Chartjs.org. (2025). Linear Radial Axis | Chart.js. [online] Available at: </a>
+            <a>www.chartjs.org. (2025). Radar Chart | Chart.js. [online] Available at: </a>
             <a
               href="https://www.chartjs.org/docs/latest/charts/radar.html"
               className="text-blue-400 underline"
@@ -65,7 +65,7 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
           </p>
           <p className="max-w-lg text-sm">
             <strong>Heatmap: </strong>
-            <a>ApexCharts.js. (2019). Options (Reference) – ApexCharts.js. [online] Available at: </a>
+            <a>ApexCharts.js. (2022). Heat Map Chart Chart Guide & Documentation – ApexCharts.js. [online] Available at: </a>
             <a
               href="https://apexcharts.com/docs/chart-types/heatmap-chart/"
               className="text-blue-400 underline"
