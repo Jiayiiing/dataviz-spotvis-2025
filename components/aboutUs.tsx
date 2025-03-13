@@ -45,6 +45,27 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
               Kaggle - Top Spotify Songs in 73 Countries
             </a>
           </p>
+          <p><strong>References:</strong></p>
+          <p className="max-w-lg text-sm">
+            <strong>Radar Chart: </strong>
+            <a>Chartjs.org. (2025). Linear Radial Axis | Chart.js. [online] Available at: </a>
+            <a
+              href="https://www.chartjs.org/docs/latest/charts/radar.html"
+              className="text-blue-400 underline"
+            >
+              https://www.chartjs.org/docs/latest/charts/radar.html
+            </a>
+          </p>
+          <p className="max-w-lg text-sm">
+            <strong>Heatmap: </strong>
+            <a>ApexCharts.js. (2019). Options (Reference) – ApexCharts.js. [online] Available at: </a>
+            <a
+              href="https://apexcharts.com/docs/chart-types/heatmap-chart/"
+              className="text-blue-400 underline"
+            >
+              https://apexcharts.com/docs/chart-types/heatmap-chart/
+            </a>
+          </p>
         </div>
       </div>
     </div>
