@@ -1,9 +1,28 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import YouTube, { YouTubeProps } from "react-youtube";
 
 interface AboutUsPopupProps {
   isOpen: boolean; // Prop to control visibility of the popup
   onClose: () => void; // Function to close the popup
+}
+
+function youtubeVideo() {
+  const onPlayerReady: YouTubeProps["onReady"] = (event) => {
+    // access to player in all event handlers via event.target
+    event.target.pauseVideo();
+  };
+
+  const opts: YouTubeProps["opts"] = {
+    height: "390",
+    width: "640",
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 0,
+    },
+  };
+
+  return <YouTube videoId="2HQDcxDnmF8" opts={opts} onReady={onPlayerReady} />;
 }
 
 const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
@@ -37,6 +56,7 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
             This was a project made for the course DH2321 Information
             Visualization at KTH Royal Institute of Technology in early 2025.
           </p>
+          {youtubeVideo()}
           <h1 className="max-w-lg text-2xl">
             <strong>Team</strong>
           </h1>
@@ -85,17 +105,18 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
 
           <h1 className="max-w-lg text-2xl">
             <strong>References</strong>
-            <p className="max-w-lg text-sm">
-              <strong>Wordcloud: </strong>
-              <a>Davies, J. (n.d.) D3-Cloud. Github. Available at: </a>
-              <a
-                href="https://github.com/jasondavies/d3-cloud"
-                className="text-blue-400 underline"
-              >
-                https://github.com/jasondavies/d3-cloud
-              </a>
-            </p>
           </h1>
+          <p className="max-w-lg text-sm">
+            <strong>Wordcloud: </strong>
+            <a>Davies, J. (n.d.) D3-Cloud. Github. Available at: </a>
+            <a
+              href="https://github.com/jasondavies/d3-cloud"
+              className="text-blue-400 underline"
+            >
+              https://github.com/jasondavies/d3-cloud
+            </a>
+          </p>
+
           <p className="max-w-lg text-sm">
             <strong>Radar Chart: </strong>
             <a>
