@@ -190,7 +190,7 @@ export default function RankingsPage() {
   }, []);
 
   return (
-    <div className="p-2 max-w-5xl mx-auto flex flex-col items-center">
+    <div className="p-2 flex flex-col items-center justify-center mx-auto w-full">
       <TitleHeader />
       <div className="absolute top-4 left-4">
         <BackArrow />
@@ -213,7 +213,7 @@ export default function RankingsPage() {
         <div className="fixed inset-0 bg-black bg-opacity-75 z-40"></div>
       )}
 
-      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-3xl mt-6 h-[75vh] overflow-hidden">
+      <div className="grid grid-cols-2 grid-rows-2 gap-3 w-[95vw] max-w-screen-4xl mt-6 h-[75vh] overflow-hidden">
         {/* WordCloud */}
         <div
           className={`p-4 border rounded bg-[var(--grid-bg-color)] flex flex-col justify-start items-center overflow-auto
