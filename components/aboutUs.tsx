@@ -169,6 +169,12 @@ const AboutUsPopup: React.FC<AboutUsPopupProps> = ({ isOpen, onClose }) => {
               https://www.npmjs.com/package/country-flag-emoji-polyfill
             </a>
           </p>
+          <h1 className="max-w-lg text-2xl">
+            <strong>Github Repository</strong>
+          </h1>
+          <p>     <a href="https://github.com/Jiayiiing/dataviz-spotvis-2025"
+              className="text-blue-400 underline">https://github.com/Jiayiiing/dataviz-spotvis-2025</a>     
+          </p>
           <br></br>
           <br></br>
           <br></br>
